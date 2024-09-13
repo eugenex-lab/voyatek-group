@@ -6,9 +6,7 @@ const Campaign = () => {
   return (
     <DashboardLayout>
       <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl text-primary">
-          Campaign
-        </h1>
+        <h1 className="text-lg font-bold md:text-2xl text-primary">Campaign</h1>
       </div>
       <div
         className="flex items-center justify-center flex-1 border border-dashed rounded-lg shadow-sm"

@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { Bell, CircleUser, Menu, Search, Plus } from "lucide-react";
+import { Bell, Menu, Search, Plus } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { navItems } from "@/lib/constants/nav-items"; // Import navItems
 import HelpCard from "../components/help-card";
