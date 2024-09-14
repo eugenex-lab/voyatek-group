@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
-import Header from "@/components/header"; // Import the new Header component
-import Sidebar from "@/components/side-bar";
+import Header from "@/components/commons/header"; // Import the new Header component
+import SidebarMd from "@/components/commons/side-bar-md";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -13,7 +13,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <Sidebar />
+      <SidebarMd />
 
       <div className="flex flex-col w-full">
         {/* Use the new Header component here */}

@@ -13,7 +13,7 @@ export const navItems = [
     badge: 6,
   },
   {
-    to: "#",
+    to: "",
     icon: "tabler:bulb",
     label: "Market Intelligence",
     badge: null,

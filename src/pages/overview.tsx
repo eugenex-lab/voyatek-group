@@ -1,32 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { DatePickerWithRange } from "@/components/range-date-range-picker";
+import { DatePickerWithRange } from "@/components/overview/range-date-range-picker";
 import { Plus } from "lucide-react";
 import Lottie from "react-lottie-player";
-import lottieJson from "@/assets/json/empty-state.json"; // Ensure this path is correct
+import lottieJson from "@/assets/json/empty-state.json";
 import { useNavigate } from "react-router-dom";
+import { useLottieAnimation } from "@/lib/utils/lottie-animation";
 
 const Overview = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
   const lottieRef = useRef(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsPlaying(false);
-    }, 6000); // Pause after 3 seconds
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleMouseEnter = () => {
-    setIsPlaying(true);
-  };
-
-
-  const handleMouseLeave = () => {
-    setIsPlaying(false);
-  };
-
+  const { isPlaying, handleMouseEnter, handleMouseLeave } =
+    useLottieAnimation(6000);
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -44,7 +28,7 @@ const Overview = () => {
 
       <div className="flex items-center justify-center flex-1 border rounded-lg shadow-sm">
         <div
-          className="flex flex-col items-center gap-1 text-center lg:mb-20"
+          className="flex flex-col items-center gap-1 p-5 text-center lg:mb-20"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -56,7 +40,7 @@ const Overview = () => {
             className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
           />
 
-          <p className="text-sm font-semibold text-black">
+          <p className="mb-4 text-sm font-semibold text-black">
             No activity yet. Create a new campaign to get started
           </p>
           <Button

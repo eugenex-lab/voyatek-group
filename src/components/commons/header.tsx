@@ -1,4 +1,3 @@
-// components/Header.tsx
 import React, { useState } from "react";
 import { Bell, Menu, Search } from "lucide-react";
 import { Icon } from "@iconify/react";
@@ -15,26 +14,33 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AnimatePresence, motion } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
-import Sidebar from "@/components/side-bar";
+import SidebarMd from "@/components/commons/side-bar-md";
+import SidebarMobile from "./side-bar-mobile";
 
 const Header: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleSidebarOpen = () => setIsSidebarOpen(true);
+  const handleSidebarClose = () => setIsSidebarOpen(false);
 
   return (
     <header className="flex h-20 items-center gap-4 border-b px-6 lg:h-[90px] lg:px-10">
-      <Sheet>
+      <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <SheetTrigger asChild>
           <Button
             variant="outlineSec"
             size="icon"
-            className="shrink-0 md:hidden "
+            className="shrink-0 md:hidden"
+            onClick={handleSidebarOpen} // Open sidebar
           >
             <Menu className="w-5 h-5" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
-          <Sidebar />
+          <SidebarMd />
+          <SidebarMobile onClose={handleSidebarClose} />
         </SheetContent>
       </Sheet>
 
@@ -71,7 +77,9 @@ const Header: React.FC = () => {
                 />
               </Button>
             </div>
-            <span className="hidden pl-2 md:block">Big Tech</span>
+            <span className="hidden pl-2 text-muted-foreground md:block">
+              Big Tech
+            </span>
             <div className="relative flex items-center w-5">
               <motion.div
                 animate={{ rotate: isDropdownOpen ? 180 : 0 }}

@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Separator } from "./ui/separator";
+import { Separator } from "../ui/separator";
 
 export function DatePickerWithRange({
   className,
@@ -28,12 +28,12 @@ export function DatePickerWithRange({
     <div className={cn("grid gap-2", className)}>
       <Popover>
         <PopoverTrigger asChild>
-          <div className="flex flex-row w-full gap-2">
+          <div className="flex flex-row flex-wrap w-full gap-2 md:flex-nowrap">
             <Button
               id="date"
               variant={"outlineSec"}
               className={cn(
-                "w-full justify-start text-left font-normal space-x-2 text-muted-foreground text-xs",
+                " justify-start text-left font-normal space-x-2 text-muted-foreground text-xs",
                 !date && "text-primary "
               )}
             >

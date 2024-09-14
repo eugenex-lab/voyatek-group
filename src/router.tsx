@@ -8,7 +8,7 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 // Import pages
 import Campaign from "./pages/campaign";
 import Overview from "./pages/overview";
-import { CreateCampaign } from "./pages/create-campaign";
+import  CreateCampaign  from "./pages/create-campaign";
 
 // Define route configuration
 const routes = [
