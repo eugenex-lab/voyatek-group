@@ -37,7 +37,7 @@ export function DatePickerWithRange({
                 !date && "text-primary "
               )}
             >
-              <CalendarIcon className="w-4 h-4" />
+              <CalendarIcon className="w-4 h-4 text-primary" />
               <span className="text-black">Date Range</span>
 
               <Separator
@@ -63,16 +63,18 @@ export function DatePickerWithRange({
                 className="h-8 pl-1 w-7 text-primary"
               />
             </Button>
-            <Button variant={"secondary"}>
+            <Button variant={"secondary"} className="space-x-1 text-primary ">
               <Icon
-                icon="gg:chevron-down"
-                className="h-8 pl-1 w-7 text-primary"
+                icon="carbon:export"
+                width="18"
+                height="18"
+                className="pl-1"
               />
-              <span className="text-black">Export</span>
+              <span className="">Export</span>
             </Button>
           </div>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="absolute w-auto p-0 -left-5" align="start">
           <Calendar
             initialFocus
             mode="range"
