@@ -31,18 +31,22 @@ import { handleError } from "@/service/error-handler";
 import { Icon } from "@iconify/react";
 import { KeywordInput } from "./keyword-input";
 import { SuccessDialog } from "../notification/create-campaign-scuccess";
+import { toast } from "@/hooks/use-toast";
 
 // Form schema definition
 const formSchema = z.object({
   campaignName: z.string().min(2, {
     message: "Campaign Name must be at least 2 characters.",
   }),
-  campaignDescription: z.string().min(2, {
-    message: "Campaign Description must be at least 2 characters.",
-  }),
+  campaignDescription: z
+    .string()
+    .min(2, {
+      message: "Campaign Description must be at least 2 characters.",
+    }),
   startDate: z.date({
     required_error: "Start Date is required.",
   }),
+
   endDate: z.date({
     required_error: "End Date is required.",
   }),
@@ -78,9 +82,8 @@ export function FormComponent() {
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormValues) => {
-    setIsLoading(true); // Set loading to true
-    const minimumLoadingTime = 3000; // Minimum loading time in milliseconds
-
+    setIsLoading(true);
+    const minimumLoadingTime = 3000;
     try {
       const campaignData = {
         ...data,
@@ -88,14 +91,18 @@ export function FormComponent() {
         endDate: data.endDate ? data.endDate.toISOString() : null,
         linkedKeywords: keywords,
       };
-
-      await apiService.createCampaign(campaignData); // Removed console.log here
-      setIsSuccessDialogOpen(true); // Open the success dialog
-      form.reset(); // Clear the form fields
-      setKeywords([]); // Clear the keywords state
+      await apiService.createCampaign(campaignData);
+      setIsSuccessDialogOpen(true);
+      form.reset();
+      setKeywords([]);
+      form.clearErrors();
     } catch (error: any) {
       const errorMsg = handleError(error);
-      form.setError("linkedKeywords", { message: errorMsg });
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: errorMsg, // This will now be "One or more validation errors occurred."
+      });
     } finally {
       setTimeout(() => setIsLoading(false), minimumLoadingTime);
     }
@@ -228,9 +235,7 @@ export function FormComponent() {
                     }
                     name="linkedKeywords"
                   />
-                  <FormMessage>
-                    {form.formState.errors.linkedKeywords?.message}
-                  </FormMessage>
+                  <FormMessage />
                 </FormItem>
               )}
             />

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/commons/header"; // Import the new Header component
 import SidebarMd from "@/components/commons/side-bar-md";
+import { Toaster } from "@/components/ui/toaster";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           >
             {children}
           </motion.main>
+          <Toaster />
         </AnimatePresence>
       </div>
     </div>
