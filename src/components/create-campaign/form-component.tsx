@@ -38,11 +38,9 @@ const formSchema = z.object({
   campaignName: z.string().min(2, {
     message: "Campaign Name must be at least 2 characters.",
   }),
-  campaignDescription: z
-    .string()
-    .min(2, {
-      message: "Campaign Description must be at least 2 characters.",
-    }),
+  campaignDescription: z.string().min(2, {
+    message: "Campaign Description must be at least 2 characters.",
+  }),
   startDate: z.date({
     required_error: "Start Date is required.",
   }),

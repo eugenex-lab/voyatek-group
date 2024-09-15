@@ -14,13 +14,30 @@ export const apiService = {
     } catch (error: any) {
       console.error("Error in createCampaign:", error);
       if (error.response) {
-        // If the error has a response, it's likely a server error
         throw error.response.data;
       } else if (error.request) {
-        // The request was made but no response was received
         throw new Error("No response received from the server");
       } else {
-        // Something happened in setting up the request that triggered an Error
+        throw new Error(error.message || "An unexpected error occurred");
+      }
+    }
+  },
+
+  async fetchCampaigns() {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/Campaign`, {
+        headers: {
+          accept: "application/json",
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error("Error in fetchCampaigns:", error);
+      if (error.response) {
+        throw error.response.data;
+      } else if (error.request) {
+        throw new Error("No response received from the server");
+      } else {
         throw new Error(error.message || "An unexpected error occurred");
       }
     }

@@ -36,6 +36,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          success: "hsl(var(--table-success))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -45,6 +46,7 @@ export default {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
           secondary: "hsl(var(--muted-secondary))",
+          tableHeader: "hsl(var(--table-header))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
