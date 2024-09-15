@@ -42,4 +42,24 @@ export const apiService = {
       }
     }
   },
+
+  async deleteCampaign(id: string) {
+    try {
+      const response = await axios.delete(`${BASE_URL}/api/Campaign/${id}`, {
+        headers: {
+          accept: "application/json",
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error("Error in deleteCampaign:", error);
+      if (error.response) {
+        throw error.response.data;
+      } else if (error.request) {
+        throw new Error("No response received from the server");
+      } else {
+        throw new Error(error.message || "An unexpected error occurred");
+      }
+    }
+  },
 };

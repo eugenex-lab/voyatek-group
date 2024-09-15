@@ -6,7 +6,6 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
-import successImage from "@/assets/logo.png"; // Import your success image here
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { useLottieAnimation } from "@/lib/utils/lottie-animation";
 import Lottie from "react-lottie-player";

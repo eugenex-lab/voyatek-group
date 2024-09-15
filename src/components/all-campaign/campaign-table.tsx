@@ -1,7 +1,5 @@
 import * as React from "react";
-import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -14,15 +12,6 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
   Table,
   TableBody,
   TableCell,
@@ -30,16 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { apiService } from "@/service/api-service";
 import { TableLoader } from "./table-loading";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
-import { Icon } from "@iconify/react";
-import { Search } from "lucide-react";
+import Lottie from "react-lottie-player";
+import lottieJson from "@/assets/json/empty-state.json";
+import { useLottieAnimation } from "@/lib/utils/lottie-animation";
+
+import { apiService } from "@/service/api-service";
+import { TableFilters } from "./table-filter";
+import { columns } from "./column-table";
+import { useNavigate } from "react-router-dom";
 
 export type Campaign = {
   id: number;
@@ -47,124 +35,6 @@ export type Campaign = {
   startDate: string;
   campaignStatus: string;
 };
-
-export const columns: ColumnDef<Campaign>[] = [
-  {
-    accessorKey: "id",
-    header: () => <div className="font-bold">S/N</div>,
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
-  },
-  {
-    accessorKey: "campaignName",
-    header: "Campaign",
-    cell: ({ row }) => <div>{row.getValue("campaignName")}</div>,
-  },
-  {
-    accessorKey: "startDate",
-    header: "Start Date",
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("startDate"));
-      return <div>{date.toLocaleDateString()}</div>;
-    },
-  },
-  {
-    accessorKey: "campaignStatus",
-    header: "Status",
-    cell: ({ row }) => {
-      const status = row.getValue<string>("campaignStatus");
-      let statusClass = "";
-      switch (status) {
-        case "Active":
-          statusClass = "text-primary-success font-bold text-xs";
-          break;
-        case "Inactive":
-          statusClass = "text-destructive font-bold text-xs";
-          break;
-        default:
-          statusClass = "font-bold";
-      }
-      return <div className={`${statusClass} uppercase`}>{status}</div>;
-    },
-  },
-  {
-    id: "actions",
-    header: () => <div className="text-center">Actions</div>,
-    cell: ({ row }) => {
-      const campaign = row.original;
-
-      return (
-        <>
-          <div className="items-center justify-center lg:flex">
-            <div className="flex-row hidden mt-2 lg:flex">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost">
-                      <Icon icon="ci:show" width="24" height="24" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>View details</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <DropdownMenuSeparator />
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost">
-                      <Icon icon="mage:edit" width="24" height="24" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Edit this campaign</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <DropdownMenuSeparator />
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost">
-                      <Icon
-                        icon="material-symbols:delete-outline"
-                        width="24"
-                        height="24"
-                      />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Delete Campaign</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-8 h-8 p-0 lg:hidden">
-                  <span className="sr-only">Open menu</span>
-                  <DotsHorizontalIcon className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <div className="">
-                  <div className="block lg:hidden">
-                    {/* For small screens */}
-                    <DropdownMenuItem> Detail</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </div>
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </>
-      );
-    },
-  },
-];
 
 export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -179,29 +49,40 @@ export function DataTable() {
   const [error, setError] = React.useState<string | null>(null);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
 
-  React.useEffect(() => {
-    async function fetchData() {
-      try {
-        const fetchedData = await apiService.fetchCampaigns();
-        if (statusFilter) {
-          setData(
-            fetchedData.filter(
-              (campaign: any) => campaign.campaignStatus === statusFilter
-            )
-          );
-        } else {
-          setData(fetchedData);
-        }
-      } catch (error) {
-        setError("Failed to fetch data");
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const lottieRef = React.useRef(null);
+  const { isPlaying, handleMouseEnter, handleMouseLeave } =
+    useLottieAnimation(6000);
 
+  const handleClick = () => {
+    setData([]); // Clear the data
+    setStatusFilter(null); // Reset the status filter to its default value
+    setLoading(true); // Trigger loading state again
+  };
+
+  const fetchData = async () => {
+    try {
+      const fetchedData = await apiService.fetchCampaigns();
+      if (statusFilter) {
+        setData(
+          fetchedData.filter(
+            (campaign: { campaignStatus: string }) =>
+              campaign.campaignStatus === statusFilter
+          )
+        );
+      } else {
+        setData(fetchedData);
+      }
+    } catch (error) {
+      setError("Failed to fetch data");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
     fetchData();
-  }, [statusFilter]); // Re-run when statusFilter changes
+  }, [statusFilter]);
 
   const table = useReactTable({
     data,
@@ -222,75 +103,42 @@ export function DataTable() {
     },
   });
 
-  if (error) return <div>{error}</div>;
+  if (error)
+    return (
+      <div>
+        <div className="flex items-center justify-center flex-1 rounded-lg shadow-sm">
+          <div
+            className="flex flex-col items-center gap-1 p-5 text-center lg:mb-20"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <Lottie
+              loop={isPlaying}
+              animationData={lottieJson}
+              play={isPlaying}
+              ref={lottieRef}
+              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
+            />
+
+            <p className="mb-4 text-sm font-semibold text-black">{error} </p>
+            <Button
+              onClick={handleClick}
+              className="flex items-center mt-2 mb-6 space-x-2 lg:mt-3"
+            >
+              <span>Reload Page</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="relative w-full">
-      <div className="flex flex-wrap items-center gap-4 py-4 lg:flex-nowrap">
-        <div className="flex flex-row items-center gap-2">
-          {["All", "Active", "Inactive"].map((status) => (
-            <Button
-              key={status}
-              variant="outline"
-              className={`${
-                statusFilter === (status === "All" ? null : status)
-                  ? "bg-primary text-white"
-                  : "text-muted-foreground"
-              }`}
-              onClick={() => setStatusFilter(status === "All" ? null : status)}
-            >
-              {status}
-            </Button>
-          ))}
-        </div>
-
-        <div className="relative lg:w-1/3">
-          <Input
-            placeholder="Search Campaigns..."
-            value={
-              (table.getColumn("campaignName")?.getFilterValue() as string) ??
-              ""
-            }
-            onChange={(event) =>
-              table
-                .getColumn("campaignName")
-                ?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm text-muted-foreground"
-          />
-          <Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="items-center justify-center hidden ml-auto lg:flex"
-            >
-              <span>Columns</span>
-              <ChevronDownIcon className="w-4 h-4 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <TableFilters
+        table={table}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+      />
       <div className="min-h-40">
         <Table>
           <TableHeader>
@@ -353,7 +201,6 @@ export function DataTable() {
           Showing {table.getRowModel().rows.length} row(s) of{" "}
           {table.getFilteredRowModel().rows.length} total.
         </div>
-
         <div className="space-x-2">
           <Button
             variant="outline"

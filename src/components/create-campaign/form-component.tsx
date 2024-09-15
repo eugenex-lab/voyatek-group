@@ -30,7 +30,7 @@ import { apiService } from "@/service/api-service";
 import { handleError } from "@/service/error-handler";
 import { Icon } from "@iconify/react";
 import { KeywordInput } from "./keyword-input";
-import { SuccessDialog } from "../notification/create-campaign-scuccess";
+import { SuccessDialog } from "../dialogs/create-campaign-scuccess";
 import { toast } from "@/hooks/use-toast";
 
 // Form schema definition
