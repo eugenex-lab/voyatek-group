@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -23,6 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DatePicker from "../create-campaign/form-date-picker";
+import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
+import { useParams } from "react-router-dom";
 
 // Define the schema with zod for validation
 const formSchema = z.object({
@@ -59,6 +61,17 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       dailyDigest: campaign.dailyDigest || "",
     },
   });
+
+  // Get id from the URL params
+  const { id } = useParams<{ id: string }>(); // The id will be extracted from the URL
+
+  // Log or perform actions with the campaign id from URL
+  useEffect(() => {
+    if (id) {
+      console.log(`Campaign ID from URL params: ${id}`);
+      // You can fetch the campaign details using the id here if necessary
+    }
+  }, [id]);
 
   const handleUpdateCampaign = async () => {};
 
@@ -252,14 +265,21 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
 
         {/* Action Buttons */}
         <div className="flex justify-start gap-4 pt-14">
-          <Button
-            variant="destructive"
-            size="lg"
-            width={"lg"}
-            onClick={handleDelete}
-          >
-            Stop Campaign
-          </Button>
+          <DeleteCampaignDialog
+            campaignId={id as string} // Use the id from params here
+            campaignName={campaign.campaignName}
+            onDelete={(id) => console.log(`Deleted campaign with id: ${id}`)}
+            trigger={
+              <Button
+                variant="destructive"
+                size="lg"
+                width={"lg"}
+                onClick={handleDelete}
+              >
+                Stop Campaign
+              </Button>
+            } // Custom trigger
+          />
           <Button
             variant={isEditing ? "default" : "outline"}
             size="lg"

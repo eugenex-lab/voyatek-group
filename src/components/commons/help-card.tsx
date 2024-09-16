@@ -27,9 +27,11 @@ const HelpCard: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button size="lg" className="" variant={"outline"}>
-            Get help
-          </Button>
+          <a href="https://docs.scrutz.io" target="_blank" rel="noreferrer">
+            <Button size="lg" className="" variant={"outline"}>
+              Get help
+            </Button>
+          </a>
         </CardContent>
       </Card>
     </div>

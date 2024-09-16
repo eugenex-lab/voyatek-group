@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,19 +22,20 @@ import { Icon } from "@iconify/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface DeleteCampaignDialogProps {
   campaignId: string;
   campaignName: string;
   onDelete: (id: string) => void;
-  onGoBack: () => void;
+  trigger?: ReactNode; // Allow passing a custom trigger button
 }
 
 export function DeleteCampaignDialog({
   campaignId,
   campaignName,
   onDelete,
+  trigger, // Optionally pass a custom trigger
 }: DeleteCampaignDialogProps) {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,15 +66,21 @@ export function DeleteCampaignDialog({
 
   const handleCloseSuccessDialog = () => {
     setShowSuccessDialog(false);
+    navigate("/campaign");
     navigate(0); // Navigate when closing the success dialog
   };
 
   return (
     <>
-      <Button variant="ghost" onClick={() => setIsDialogOpen(true)}>
-        <Icon icon="material-symbols:delete-outline" width="24" height="24" />
-        <span className="text-left lg:hidden">Delete</span>
-      </Button>
+      {/* Custom trigger button or default */}
+      {trigger ? (
+        <span onClick={() => setIsDialogOpen(true)}>{trigger}</span>
+      ) : (
+        <Button variant="ghost" onClick={() => setIsDialogOpen(true)}>
+          <Icon icon="material-symbols:delete-outline" width="24" height="24" />
+          <span className="text-left lg:hidden">Delete</span>
+        </Button>
+      )}
 
       <AlertDialog
         open={isDialogOpen}
@@ -130,7 +137,9 @@ export function DeleteCampaignDialog({
         onOpenChange={(open) => {
           if (!open) {
             handleCloseSuccessDialog();
+            navigate("/campaign"); // Navigate when closing the success dialog
           }
+          navigate("/campaign"); // Navigate when closing the success dialog
         }}
       >
         <DialogContent>

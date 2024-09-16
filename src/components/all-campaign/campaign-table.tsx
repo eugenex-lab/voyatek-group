@@ -26,6 +26,7 @@ import { apiService } from "@/service/api-service";
 import { TableFilters } from "./table-filter";
 import { columns } from "./column-table";
 import { ErrorView } from "../commons/error-view";
+import { useNavigate } from "react-router-dom";
 
 export type Campaign = {
   id: number;
@@ -49,6 +50,7 @@ export function DataTable() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useLottieAnimation(12000);
 
@@ -56,6 +58,7 @@ export function DataTable() {
     setData(fetchedData); // Reset the data to the original fetched data
     setStatusFilter(null); // Reset the status filter to its default value
     setLoading(true); // Trigger loading state again
+    navigate(0); // Navigate when closing the success dialog
   };
 
   const fetchData = async () => {
