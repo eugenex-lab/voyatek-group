@@ -22,18 +22,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Icon } from "@iconify/react";
+
 import DatePicker from "../create-campaign/form-date-picker";
 import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { KeywordInput } from "../create-campaign/keyword-input";
+import { toast } from "@/hooks/use-toast";
+import { apiService } from "@/service/api-service";
 
 // Define the schema with zod for validation
 const formSchema = z.object({
-  campaignName: z.string().min(2),
-  campaignDescription: z.string().min(2),
-  startDate: z.date(),
-  endDate: z.date(),
-  digestCampaign: z.string(),
-  linkedKeywords: z.array(z.string()).min(1),
+  campaignName: z.string().min(2, {
+    message: "Campaign Name must be at least 2 characters.",
+  }),
+  campaignDescription: z.string().min(2, {
+    message: "Campaign Description must be at least 2 characters.",
+  }),
+  startDate: z.date({
+    required_error: "Start Date is required.",
+  }),
+
+  endDate: z.date({
+    required_error: "End Date is required.",
+  }),
+  digestCampaign: z.boolean(),
+  linkedKeywords: z.array(z.string()).min(1, {
+    message: "At least one keyword is required.",
+  }),
   dailyDigest: z.string().optional(),
 });
 
@@ -49,6 +65,8 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
   onStop,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,6 +79,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       dailyDigest: campaign.dailyDigest || "",
     },
   });
+  const navigate = useNavigate();
 
   // Get id from the URL params
   const { id } = useParams<{ id: string }>(); // The id will be extracted from the URL
@@ -73,7 +92,45 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
     }
   }, [id]);
 
-  const handleUpdateCampaign = async () => {};
+  const handleUpdateCampaign = async () => {
+    setLoading(true);
+    try {
+      // Prepare data to match the API request format
+      const formData = {
+        id: id, // Use the ID from the URL params
+        campaignName: form.getValues("campaignName"),
+        campaignDescription: form.getValues("campaignDescription"),
+        startDate: form.getValues("startDate")!.toISOString(),
+        endDate: form.getValues("endDate")!.toISOString(),
+        digestCampaign: form.getValues("digestCampaign") === "yes", // Convert to boolean
+        linkedKeywords: form.getValues("linkedKeywords"),
+        dailyDigest: form.getValues("dailyDigest") || "",
+      };
+
+      // Call the updateCampaign method
+      await apiService.updateCampaign(id as string, formData);
+
+      toast({
+        variant: "default",
+        title: "Success",
+        description: "Campaign updated successfully.",
+      });
+
+      if (onUpdate) onUpdate();
+
+      // Reload the page after successful update
+      navigate(0);
+    } catch (error: any) {
+      setError(error.message || "Failed to update campaign.");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to update campaign.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async () => {};
 
@@ -153,45 +210,46 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
           />
         </div>
         {/* Linked Keywords */}
+        {/* Linked Keywords */}
         <FormField
           control={form.control}
           name="linkedKeywords"
           render={() => (
             <FormItem>
-              <FormLabel>Linked Keywords</FormLabel>
+              <FormLabel>
+                Linked Keywords
+                {isEditing && (
+                  <span className="text-xs text-destructive"> *</span>
+                )}
+              </FormLabel>
               <FormControl>
-                <div
-                  className={`flex flex-wrap p-1 border rounded-md min-h-24 bg-transparent ${
-                    !isEditing ? "cursor-not-allowed opacity-50" : ""
-                  }`}
-                >
-                  {form
-                    .getValues("linkedKeywords")
-                    .map((keyword: string, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-center h-6 p-1 px-2 m-1 text-white rounded-sm bg-primary "
-                      >
-                        <span className="text-sm text-center min-w-10">
-                          {keyword}
-                        </span>
-                        {isEditing && (
-                          <button
-                            type="button"
-                            className="ml-1 text-white"
-                            onClick={() => {
-                              const updatedKeywords = form
-                                .getValues("linkedKeywords")
-                                .filter((_: any, i: any) => i !== index);
-                              form.setValue("linkedKeywords", updatedKeywords);
-                            }}
-                          >
-                            &times;
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                </div>
+                {/* If in editing mode, show interactive keyword input */}
+                {isEditing ? (
+                  <KeywordInput
+                    keywords={form.getValues("linkedKeywords")}
+                    setKeywords={(updatedKeywords: string[]) =>
+                      form.setValue("linkedKeywords", updatedKeywords)
+                    }
+                  />
+                ) : (
+                  // When not editing, show keywords in a disabled view
+                  <div
+                    className={`flex flex-wrap p-1 border rounded-md min-h-24 bg-transparent cursor-not-allowed opacity-50`}
+                  >
+                    {form
+                      .getValues("linkedKeywords")
+                      .map((keyword: string, index: number) => (
+                        <div
+                          key={index}
+                          className="flex items-center h-6 p-1 px-2 m-1 text-white rounded-sm bg-primary"
+                        >
+                          <span className="text-sm text-center min-w-10">
+                            {keyword}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                )}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -288,7 +346,18 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
               isEditing ? handleUpdateCampaign : () => setIsEditing(!isEditing)
             }
           >
-            {isEditing ? "Save Changes" : "Edit Information"}
+            {loading ? (
+              <Icon
+                icon="line-md:loading-alt-loop"
+                width="20"
+                height="20"
+                className="animate-spin"
+              />
+            ) : isEditing ? (
+              "Save Changes"
+            ) : (
+              "Edit Information"
+            )}
           </Button>
         </div>
       </form>

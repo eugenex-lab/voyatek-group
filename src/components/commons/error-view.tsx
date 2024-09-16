@@ -18,6 +18,9 @@ export const ErrorView: React.FC<ErrorViewProps> = ({
   const lottieRef = React.useRef(null);
   const { isPlaying, handleMouseEnter, handleMouseLeave } =
     useLottieAnimation(12000);
+  const handleReload = () => {
+    window.location.reload(); // Reload the current page
+  };
 
   return (
     <div className="flex items-center justify-center flex-1 rounded-lg shadow-sm">
@@ -36,7 +39,7 @@ export const ErrorView: React.FC<ErrorViewProps> = ({
 
         <p className="mb-4 text-sm font-semibold text-black">{errorMessage}</p>
         <Button
-          onClick={onRetry}
+          onClick={handleReload}
           className="flex items-center mt-2 mb-6 space-x-2 lg:mt-3"
         >
           <span>Reload Page</span>

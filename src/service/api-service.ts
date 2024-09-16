@@ -30,7 +30,7 @@ export const apiService = {
           accept: "application/json",
         },
       });
-      return response.data
+      return response.data;
     } catch (error: any) {
       console.error("Error in fetchCampaigns:", error);
       if (error.response) {
@@ -93,6 +93,56 @@ export const apiService = {
       return activeCampaignsCount; // Return the count instead of the array
     } catch (error: any) {
       console.error("Error in fetchActiveCampaigns:", error);
+      if (error.response) {
+        throw error.response.data;
+      } else if (error.request) {
+        throw new Error("No response received from the server");
+      } else {
+        throw new Error(error.message || "An unexpected error occurred");
+      }
+    }
+  },
+
+  // Inside apiService
+
+  async updateCampaignStatus(id: string, status: boolean) {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/api/CampaignStatus/${id}`,
+        {
+          id, // Pass the ID in the request body
+          campaignStatus: status, // The new campaign status
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error("Error in updateCampaignStatus:", error);
+      if (error.response) {
+        throw error.response.data;
+      } else if (error.request) {
+        throw new Error("No response received from the server");
+      } else {
+        throw new Error(error.message || "An unexpected error occurred");
+      }
+    }
+  },
+
+  // Add this method to apiService
+  async updateCampaign(id: string, data: any) {
+    try {
+      const response = await axios.put(`${BASE_URL}/api/Campaign/${id}`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error("Error in updateCampaign:", error);
       if (error.response) {
         throw error.response.data;
       } else if (error.request) {

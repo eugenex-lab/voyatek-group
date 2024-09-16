@@ -100,7 +100,7 @@ const SidebarMd = () => {
                       className="text-red"
                     />
                   ) : (
-                    activeCampaignCount > 0 && activeCampaignCount
+                    activeCampaignCount
                   )}
                 </Badge>
               </Link>

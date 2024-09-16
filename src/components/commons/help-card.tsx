@@ -27,7 +27,11 @@ const HelpCard: React.FC = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <a href="https://docs.scrutz.io" target="_blank" rel="noreferrer">
+          <a
+            href="https://www.infineon.com/cms/en/about-infineon/company/contacts/"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Button size="lg" className="" variant={"outline"}>
               Get help
             </Button>
