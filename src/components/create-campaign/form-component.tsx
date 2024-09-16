@@ -198,11 +198,11 @@ export function FormComponent() {
               control={form.control}
               name="digestCampaign"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between w-full">
+                <FormItem className="flex flex-row items-center justify-between w-full space-y-0">
                   <FormLabel>
                     Want to receive daily digest about the campaign?
                   </FormLabel>
-                  <div>
+                  <div className="flex flex-row items-center justify-center">
                     <FormControl>
                       <Switch
                         checked={field.value}
@@ -245,7 +245,7 @@ export function FormComponent() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    How often would you like to receive the digest?
+                    Kindly select the time you want tio receive daily digest
                   </FormLabel>
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>

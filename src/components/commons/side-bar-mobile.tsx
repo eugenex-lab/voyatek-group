@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { Plus } from "lucide-react";
@@ -16,11 +16,13 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Navigate and close sidebar function
   const handleClick = (to: string) => {
     navigate(to);
-    onClose(); // Close the sidebar after navigation
+    onClose(); // Close sidebar after navigation
   };
 
+  // Dynamically render the nav items with useMemo
   const renderNavItems = useMemo(() => {
     return navItems.map(({ to, icon, label, badge }) => (
       <div
@@ -34,7 +36,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ onClose }) => {
         <Link
           to={to}
           className="flex items-center w-full gap-3"
-          onClick={() => handleClick(to)} // Handle click to navigate and close sidebar
+          onClick={() => handleClick(to)} // Navigate and close the sidebar
         >
           <Icon icon={icon} className="w-5 h-5 font-bold" />
           {label}
@@ -50,6 +52,8 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ onClose }) => {
 
   return (
     <div className="flex flex-col md:hidden">
+      {" "}
+      {/* Hidden on medium and larger screens */}
       <div className="flex items-center justify-center px-4 h-14">
         <Link to="/" className="flex items-center gap-2 font-semibold">
           <img src={logo} alt="Logo" className="" />
@@ -58,6 +62,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ onClose }) => {
           </h3>
         </Link>
       </div>
+      {/* Navigation and button for mobile sidebar */}
       <nav className="grid items-start p-4 space-y-3 text-sm font-medium">
         <Button
           onClick={() => handleClick("/create-campaign")}
@@ -68,6 +73,7 @@ const SidebarMobile: React.FC<SidebarMobileProps> = ({ onClose }) => {
         </Button>
         {renderNavItems}
       </nav>
+      {/* Help card at the bottom */}
       <div className="p-4 mt-auto">
         <HelpCard />
       </div>

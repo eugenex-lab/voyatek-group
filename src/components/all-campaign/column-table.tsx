@@ -43,12 +43,6 @@ export const columns: ColumnDef<Campaign>[] = [
   {
     id: "actions",
     header: () => <div className="text-center">Actions</div>,
-    cell: ({ row }) => (
-      <TableActions campaign={row.original} refreshData={refreshData} />
-    ),
+    cell: ({ row }) => <TableActions campaign={row.original} />,
   },
 ];
-function refreshData(): void {
-  throw new Error("Function not implemented.");
-}
-

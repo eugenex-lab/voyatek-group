@@ -7,7 +7,6 @@ interface PageLayoutProps {
   headerComponent?: ReactNode; // Optional component
 }
 
-
 const PageLayout: React.FC<PageLayoutProps> = ({
   title,
   children,
@@ -24,7 +23,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         className="flex flex-1 border rounded-lg shadow-sm"
         x-chunk="dashboard-02-chunk-1"
       >
-        <div className="flex flex-col items-center w-full gap-1 p-6 ">
+        <div className="flex flex-col items-center w-full gap-1 p-6 lg:p-10">
           {children}
         </div>
       </div>

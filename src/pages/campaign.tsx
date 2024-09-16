@@ -1,5 +1,5 @@
 // src/components/Campaign.tsx
-import {DataTable} from "@/components/all-campaign/campaign-table";
+import { DataTable } from "@/components/all-campaign/campaign-table";
 import PageLayout from "@/layouts/page-layout";
 import React from "react";
 

@@ -22,7 +22,7 @@ export function SuccessDialog({ isOpen, onClose }: SuccessDialogProps) {
 
   const lottieRef = useRef(null);
   const { isPlaying, handleMouseEnter, handleMouseLeave } =
-    useLottieAnimation(600000);
+    useLottieAnimation(12000);
 
   const handleGoBack = () => {
     onClose(); // Close the dialog

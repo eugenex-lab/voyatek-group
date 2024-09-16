@@ -8,7 +8,8 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 // Import pages
 import Campaign from "./pages/campaign";
 import Overview from "./pages/overview";
-import  CreateCampaign  from "./pages/create-campaign";
+import CreateCampaign from "./pages/create-campaign";
+import CampaignDetails from "./pages/campaign-details";
 
 // Define route configuration
 const routes = [
@@ -27,6 +28,11 @@ const routes = [
     path: "/create-campaign",
     component: CreateCampaign,
   },
+  {
+    key: "campaign-details",
+    path: "/campaign/:id",
+    component: CampaignDetails,
+  }, // New Route
 ];
 
 // RouterConfig component

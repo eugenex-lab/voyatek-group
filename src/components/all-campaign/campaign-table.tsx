@@ -20,14 +20,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TableLoader } from "./table-loading";
-import Lottie from "react-lottie-player";
-import lottieJson from "@/assets/json/empty-state.json";
 import { useLottieAnimation } from "@/lib/utils/lottie-animation";
 
 import { apiService } from "@/service/api-service";
 import { TableFilters } from "./table-filter";
 import { columns } from "./column-table";
-import { useNavigate } from "react-router-dom";
+import { ErrorView } from "../commons/error-view";
 
 export type Campaign = {
   id: number;
@@ -37,7 +35,9 @@ export type Campaign = {
 };
 
 export function DataTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "id", desc: true }, // Default sorting by ID in descending order
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -45,16 +45,15 @@ export function DataTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState<Campaign[]>([]);
+  const [fetchedData, setFetchedData] = React.useState<Campaign[]>([]); // Store the original data separately
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
 
-  const lottieRef = React.useRef(null);
-  const { isPlaying, handleMouseEnter, handleMouseLeave } =
-    useLottieAnimation(6000);
+  useLottieAnimation(12000);
 
   const handleClick = () => {
-    setData([]); // Clear the data
+    setData(fetchedData); // Reset the data to the original fetched data
     setStatusFilter(null); // Reset the status filter to its default value
     setLoading(true); // Trigger loading state again
   };
@@ -62,19 +61,10 @@ export function DataTable() {
   const fetchData = async () => {
     try {
       const fetchedData = await apiService.fetchCampaigns();
-      if (statusFilter) {
-        setData(
-          fetchedData.filter(
-            (campaign: { campaignStatus: string }) =>
-              campaign.campaignStatus === statusFilter
-          )
-        );
-      } else {
-        setData(fetchedData);
-      }
+      setFetchedData(fetchedData); // Set the fetched data once
+      setData(fetchedData); // Set the displayed data initially to fetched data
     } catch (error) {
       setError("Failed to fetch data");
-      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -82,7 +72,20 @@ export function DataTable() {
 
   React.useEffect(() => {
     fetchData();
-  }, [statusFilter]);
+  }, []);
+
+  // Apply filter based on the status
+  React.useEffect(() => {
+    if (statusFilter) {
+      setData(
+        fetchedData.filter(
+          (campaign) => campaign.campaignStatus === statusFilter
+        )
+      );
+    } else {
+      setData(fetchedData); // Reset to original data if no filter is selected
+    }
+  }, [statusFilter, fetchedData]);
 
   const table = useReactTable({
     data,
@@ -103,41 +106,16 @@ export function DataTable() {
     },
   });
 
-  if (error)
-    return (
-      <div>
-        <div className="flex items-center justify-center flex-1 rounded-lg shadow-sm">
-          <div
-            className="flex flex-col items-center gap-1 p-5 text-center lg:mb-20"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <Lottie
-              loop={isPlaying}
-              animationData={lottieJson}
-              play={isPlaying}
-              ref={lottieRef}
-              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
-            />
-
-            <p className="mb-4 text-sm font-semibold text-black">{error} </p>
-            <Button
-              onClick={handleClick}
-              className="flex items-center mt-2 mb-6 space-x-2 lg:mt-3"
-            >
-              <span>Reload Page</span>
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
+  if (error) return <ErrorView errorMessage={error} onRetry={handleClick} />;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full ">
       <TableFilters
         table={table}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
+        data={data}
+        fetchedData={fetchedData}
       />
       <div className="min-h-40">
         <Table>

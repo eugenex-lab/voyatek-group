@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export const useLottieAnimation = (duration = 6000) => {
+export const useLottieAnimation = (duration = 12000) => {
   const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {

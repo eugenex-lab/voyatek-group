@@ -13,33 +13,47 @@ interface TableFiltersProps {
   table: Table<any>;
   statusFilter: string | null;
   setStatusFilter: (status: string | null) => void;
+  data: any[]; // Make sure to type this correctly according to your data structure
+  fetchedData: any[];
 }
 
 export const TableFilters: React.FC<TableFiltersProps> = ({
   table,
   statusFilter,
   setStatusFilter,
+  data,
+  fetchedData,
 }) => {
   return (
     <div className="flex flex-wrap items-center gap-4 py-4 lg:flex-nowrap">
       <div className="flex flex-row items-center gap-2">
-        {["All", "Active", "Inactive"].map((status) => (
-          <Button
-            key={status}
-            variant="outline"
-            className={`${
-              statusFilter === (status === "All" ? null : status)
-                ? "bg-primary text-white"
-                : "text-muted-foreground"
-            }`}
-            onClick={() => setStatusFilter(status === "All" ? null : status)}
-          >
-            {status}
-          </Button>
-        ))}
+        {["All", "Active", "Inactive"].map((status) => {
+          // Count the number of campaigns for each status based on the original fetched data
+          const statusCount =
+            status === "All"
+              ? fetchedData.length // All campaigns
+              : fetchedData.filter(
+                  (campaign) => campaign.campaignStatus === status
+                ).length;
+
+          return (
+            <Button
+              key={status}
+              variant="outline"
+              className={`${
+                statusFilter === (status === "All" ? null : status)
+                  ? "bg-primary text-white"
+                  : "text-muted-foreground"
+              }`}
+              onClick={() => setStatusFilter(status === "All" ? null : status)}
+            >
+              {status} ({statusCount})
+            </Button>
+          );
+        })}
       </div>
 
-      <div className="relative lg:w-1/3">
+      <div className="relative">
         <Input
           placeholder="Search Campaigns..."
           value={
@@ -48,7 +62,7 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
           onChange={(event) =>
             table.getColumn("campaignName")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm text-muted-foreground"
+          className="max-w-sm text-muted-foreground lg:max-w-md"
         />
         <Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
       </div>

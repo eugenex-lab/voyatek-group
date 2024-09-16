@@ -8,7 +8,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   Dialog,
@@ -23,6 +22,7 @@ import { Icon } from "@iconify/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
+import { useNavigate } from "react-router-dom";
 
 interface DeleteCampaignDialogProps {
   campaignId: string;
@@ -35,11 +35,11 @@ export function DeleteCampaignDialog({
   campaignId,
   campaignName,
   onDelete,
-  onGoBack,
 }: DeleteCampaignDialogProps) {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Manage dialog open state
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleDelete = async () => {
     setIsLoading(true);
@@ -63,12 +63,14 @@ export function DeleteCampaignDialog({
     }
   };
 
+  const handleCloseSuccessDialog = () => {
+    setShowSuccessDialog(false);
+    navigate(0); // Navigate when closing the success dialog
+  };
+
   return (
     <>
-      <Button
-        variant="ghost"
-        onClick={() => setIsDialogOpen(true)} // Open the dialog on button click
-      >
+      <Button variant="ghost" onClick={() => setIsDialogOpen(true)}>
         <Icon icon="material-symbols:delete-outline" width="24" height="24" />
         <span className="text-left lg:hidden">Delete</span>
       </Button>
@@ -98,7 +100,7 @@ export function DeleteCampaignDialog({
                   width={"md"}
                   variant="outline"
                   size="lg"
-                  onClick={() => setIsDialogOpen(false)} // Close the dialog when cancel is clicked
+                  onClick={() => setIsDialogOpen(false)}
                 >
                   Cancel
                 </Button>
@@ -109,11 +111,11 @@ export function DeleteCampaignDialog({
                     isLoading
                       ? "bg-gray-500"
                       : "bg-destructive hover:bg-destructive/90"
-                  }`} // Show loading state
+                  }`}
                   variant="destructive"
                   width={"md"}
                   onClick={handleDelete}
-                  disabled={isLoading} // Disable button while loading
+                  disabled={isLoading}
                 >
                   {isLoading ? "Deleting..." : "Delete Campaign"}
                 </Button>
@@ -123,8 +125,15 @@ export function DeleteCampaignDialog({
         </AlertDialogContent>
       </AlertDialog>
 
-      <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-        <DialogContent className="">
+      <Dialog
+        open={showSuccessDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleCloseSuccessDialog();
+          }
+        }}
+      >
+        <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-center text-muted-foreground">
               Campaign Deleted
@@ -136,13 +145,7 @@ export function DeleteCampaignDialog({
           </DialogHeader>
           <DialogFooter>
             <div className="flex items-center justify-center w-full gap-4">
-              <Button
-                size="lg"
-                onClick={() => {
-                  setShowSuccessDialog(false);
-                  onGoBack();
-                }}
-              >
+              <Button size="lg" onClick={handleCloseSuccessDialog}>
                 Go Back to Campaign List
               </Button>
             </div>

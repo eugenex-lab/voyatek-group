@@ -10,7 +10,7 @@ import { useLottieAnimation } from "@/lib/utils/lottie-animation";
 const Overview = () => {
   const lottieRef = useRef(null);
   const { isPlaying, handleMouseEnter, handleMouseLeave } =
-    useLottieAnimation(6000);
+    useLottieAnimation(12000);
   const navigate = useNavigate();
 
   const handleClick = () => {

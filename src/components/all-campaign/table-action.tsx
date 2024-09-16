@@ -17,25 +17,25 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Campaign } from "./campaign-table";
 import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
 import { apiService } from "@/service/api-service";
+import { useNavigate } from "react-router-dom";
 
-export function TableActions({
-  campaign,
-  refreshData, // Add refreshData prop
-}: {
-  campaign: Campaign;
-  refreshData: () => void; // Define the function signature for refresh
-}) {
+export function TableActions({ campaign }: { campaign: Campaign }) {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const handleDelete = async (id: string) => {
     try {
       await apiService.deleteCampaign(id); // Assuming you have a deleteCampaign API service
-      refreshData(); // Call the refresh function after deletion
     } catch (error) {
       console.error("Error deleting campaign:", error);
     }
   };
 
   const handleGoBack = () => {
-    console.log("Go back action triggered.");
+    // console.log("Go back action triggered.");
+  };
+
+  const handleViewDetails = () => {
+    navigate(`/campaign/${campaign.id}`); // Navigate to campaign details page
   };
 
   return (
@@ -44,7 +44,7 @@ export function TableActions({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost">
+              <Button variant="ghost" onClick={handleViewDetails}>
                 <Icon icon="ci:show" width="24" height="24" />
               </Button>
             </TooltipTrigger>
@@ -75,7 +75,6 @@ export function TableActions({
                 campaignName={campaign.campaignName || "Unnamed Campaign"}
                 onDelete={handleDelete}
                 onGoBack={handleGoBack}
-                refreshData={refreshData} // Pass the refreshData prop
               />
             </TooltipTrigger>
             <TooltipContent>
@@ -89,7 +88,7 @@ export function TableActions({
           <DotsHorizontalIcon />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>View</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleViewDetails}>View</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Edit</DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -99,7 +98,6 @@ export function TableActions({
               campaignName={campaign.campaignName || "Unnamed Campaign"}
               onDelete={handleDelete}
               onGoBack={handleGoBack}
-              refreshData={refreshData} // Pass the refreshData prop
             />
           </DropdownMenuItem>
         </DropdownMenuContent>

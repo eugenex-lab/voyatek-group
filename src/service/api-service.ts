@@ -30,7 +30,7 @@ export const apiService = {
           accept: "application/json",
         },
       });
-      return response.data;
+      return response.data
     } catch (error: any) {
       console.error("Error in fetchCampaigns:", error);
       if (error.response) {
@@ -53,6 +53,46 @@ export const apiService = {
       return response.data;
     } catch (error: any) {
       console.error("Error in deleteCampaign:", error);
+      if (error.response) {
+        throw error.response.data;
+      } else if (error.request) {
+        throw new Error("No response received from the server");
+      } else {
+        throw new Error(error.message || "An unexpected error occurred");
+      }
+    }
+  },
+
+  async getCampaignById(id: string) {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/Campaign/${id}`, {
+        headers: {
+          accept: "application/json",
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      console.error("Error in getCampaignById:", error);
+      if (error.response) {
+        throw error.response.data;
+      } else if (error.request) {
+        throw new Error("No response received from the server");
+      } else {
+        throw new Error(error.message || "An unexpected error occurred");
+      }
+    }
+  },
+
+  async fetchActiveCampaigns() {
+    try {
+      const campaigns = await this.fetchCampaigns();
+      const activeCampaignsCount = campaigns.filter(
+        (campaign: { campaignStatus: string }) =>
+          campaign.campaignStatus === "Active"
+      ).length;
+      return activeCampaignsCount; // Return the count instead of the array
+    } catch (error: any) {
+      console.error("Error in fetchActiveCampaigns:", error);
       if (error.response) {
         throw error.response.data;
       } else if (error.request) {
