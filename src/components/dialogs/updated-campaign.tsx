@@ -13,14 +13,20 @@ import lottieJson from "@/assets/json/success.json";
 interface SuccessDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  onRedirect?: () => void; // Optional callback for additional actions
 }
 
-export function SuccessDialog({ isOpen, onClose }: SuccessDialogProps) {
+export function SuccessDialog({
+  isOpen,
+  onClose,
+  onRedirect,
+}: SuccessDialogProps) {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleGoBack = () => {
     onClose(); // Close the dialog
-    navigate("/"); // Redirect to /campaign
+    if (onRedirect) onRedirect(); // Optional redirect callback
+    navigate(0); // Redirect to /campaign
   };
 
   return (
@@ -31,10 +37,10 @@ export function SuccessDialog({ isOpen, onClose }: SuccessDialogProps) {
             <Lottie
               loop={true}
               animationData={lottieJson}
-              play={true} // Simplified to always play
+              play={true}
               className="h-28 w-28"
             />
-            <p className="mt-4">Campaign Successfully Created!</p>
+            <p className="mt-4">Campaign Successfully Updated!</p>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

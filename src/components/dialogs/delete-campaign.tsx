@@ -27,14 +27,14 @@ import { useNavigate, useParams } from "react-router-dom";
 interface DeleteCampaignDialogProps {
   campaignId: string;
   campaignName: string;
-  onDelete: (id: string) => void;
+  onDelete?: (id: string) => void;
   trigger?: ReactNode; // Allow passing a custom trigger button
 }
 
 export function DeleteCampaignDialog({
   campaignId,
   campaignName,
-  onDelete,
+  // onDelete,
   trigger, // Optionally pass a custom trigger
 }: DeleteCampaignDialogProps) {
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
@@ -46,7 +46,7 @@ export function DeleteCampaignDialog({
     setIsLoading(true);
     try {
       await apiService.deleteCampaign(campaignId);
-      onDelete(campaignId);
+      // onDelete(campaignId);
       setShowSuccessDialog(true);
     } catch (error: any) {
       toast({

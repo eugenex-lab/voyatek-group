@@ -124,6 +124,7 @@ const CampaignDetails: React.FC = () => {
               />
             ) : (
               <Switch
+                className="text-black data-[state=checked]:bg-primary"
                 checked={campaign?.campaignStatus === "Active"}
                 onCheckedChange={toggleCampaignStatus}
                 id="campaign-status"

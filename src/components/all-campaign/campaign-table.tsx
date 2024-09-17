@@ -37,7 +37,7 @@ export type Campaign = {
 
 export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "id", desc: true }, // Default sorting by ID in descending order
+    { id: "id", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -46,26 +46,26 @@ export function DataTable() {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [data, setData] = React.useState<Campaign[]>([]);
-  const [fetchedData, setFetchedData] = React.useState<Campaign[]>([]); // Store the original data separately
+  const [fetchedData, setFetchedData] = React.useState<Campaign[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useLottieAnimation(12000);
 
   const handleClick = () => {
-    setData(fetchedData); // Reset the data to the original fetched data
-    setStatusFilter(null); // Reset the status filter to its default value
-    setLoading(true); // Trigger loading state again
-    navigate(0); // Navigate when closing the success dialog
+    setData(fetchedData);
+    setStatusFilter(null);
+    setLoading(true);
+    navigate(0);
   };
 
   const fetchData = async () => {
     try {
       const fetchedData = await apiService.fetchCampaigns();
-      setFetchedData(fetchedData); // Set the fetched data once
-      setData(fetchedData); // Set the displayed data initially to fetched data
+      setFetchedData(fetchedData);
+      setData(fetchedData);
     } catch (error) {
       setError("Failed to fetch data");
     } finally {
@@ -77,7 +77,6 @@ export function DataTable() {
     fetchData();
   }, []);
 
-  // Apply filter based on the status
   React.useEffect(() => {
     if (statusFilter) {
       setData(
@@ -86,7 +85,7 @@ export function DataTable() {
         )
       );
     } else {
-      setData(fetchedData); // Reset to original data if no filter is selected
+      setData(fetchedData);
     }
   }, [statusFilter, fetchedData]);
 
@@ -112,7 +111,7 @@ export function DataTable() {
   if (error) return <ErrorView errorMessage={error} onRetry={handleClick} />;
 
   return (
-    <div className="relative w-full ">
+    <div className="relative w-full">
       <TableFilters
         table={table}
         statusFilter={statusFilter}

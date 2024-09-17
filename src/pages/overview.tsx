@@ -22,7 +22,7 @@ const Overview = () => {
       <div className="flex flex-col items-center justify-between w-full gap-4 md:flex-row">
         <h1 className="text-lg font-bold md:text-2xl text-primary">Overview</h1>
         <div>
-          <DatePickerWithRange />
+          <DatePickerWithRange showExportButton />
         </div>
       </div>
 

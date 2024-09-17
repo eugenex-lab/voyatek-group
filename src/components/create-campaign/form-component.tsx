@@ -33,8 +33,6 @@ import { KeywordInput } from "./keyword-input";
 import { SuccessDialog } from "../dialogs/create-campaign-scuccess";
 import { toast } from "@/hooks/use-toast";
 
-import { addDays } from "date-fns"; // If you're using date-fns for date manipulation
-
 // Get today's date and set time to 00:00:00 for comparison
 const today = new Date();
 today.setHours(0, 0, 0, 0);

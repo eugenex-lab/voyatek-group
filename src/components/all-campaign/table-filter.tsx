@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import { DatePickerWithRange } from "../overview/range-date-range-picker";
 
 interface TableFiltersProps {
   table: Table<any>;
@@ -66,6 +67,9 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
         />
         <Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
       </div>
+
+      <DatePickerWithRange className="ml-auto" />
+      {/* Add any other necessary controls */}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

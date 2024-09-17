@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
@@ -16,12 +14,21 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "../ui/separator";
 
+interface DatePickerWithRangeProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  showExportButton?: boolean;
+}
+
 export function DatePickerWithRange({
   className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+  showExportButton = false,
+}: DatePickerWithRangeProps) {
+  const [date, setDate] = React.useState<DateRange | undefined>(() => {
+    const today = new Date();
+    return {
+      from: today,
+      to: addDays(today, 2),
+    };
   });
 
   return (
@@ -33,8 +40,8 @@ export function DatePickerWithRange({
               id="date"
               variant={"outlineSec"}
               className={cn(
-                " justify-start text-left font-normal space-x-2 text-muted-foreground text-xs",
-                !date && "text-primary "
+                "justify-start text-left font-normal space-x-2 text-muted-foreground text-xs",
+                !date && "text-primary"
               )}
             >
               <CalendarIcon className="w-4 h-4 text-primary" />
@@ -63,15 +70,17 @@ export function DatePickerWithRange({
                 className="h-8 pl-1 w-7 text-primary"
               />
             </Button>
-            <Button variant={"secondary"} className="space-x-1 text-primary ">
-              <Icon
-                icon="carbon:export"
-                width="18"
-                height="18"
-                className="pl-1"
-              />
-              <span className="">Export</span>
-            </Button>
+            {showExportButton && (
+              <Button variant={"secondary"} className="space-x-1 text-primary">
+                <Icon
+                  icon="carbon:export"
+                  width="18"
+                  height="18"
+                  className="pl-1"
+                />
+                <span className="">Export</span>
+              </Button>
+            )}
           </div>
         </PopoverTrigger>
         <PopoverContent className="absolute w-auto p-0 -left-5" align="start">

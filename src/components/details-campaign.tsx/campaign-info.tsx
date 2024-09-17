@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { formatISO } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,11 @@ import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
 import { useNavigate, useParams } from "react-router-dom";
 import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
+import { SuccessDialog } from "../dialogs/create-campaign-scuccess";
+
+// Get today's date and set time to 00:00:00 for comparison
+const today = new Date();
+today.setHours(0, 0, 0, 0);
 
 // Define the schema with zod for validation
 const formSchema = z.object({
@@ -39,12 +44,18 @@ const formSchema = z.object({
   campaignDescription: z.string().min(2, {
     message: "Campaign Description must be at least 2 characters.",
   }),
-  startDate: z.date({
-    required_error: "Start Date is required.",
-  }),
-  endDate: z.date({
-    required_error: "End Date is required.",
-  }),
+  startDate: z
+    .date({
+      required_error: "Start Date is required.",
+    }),
+  
+  endDate: z
+    .date({
+      required_error: "End Date is required.",
+    })
+    .refine((date) => date >= today, {
+      message: "End Date cannot be in the past.",
+    }),
   digestCampaign: z.string(),
   linkedKeywords: z.array(z.string()).min(1, {
     message: "At least one keyword is required.",
@@ -66,6 +77,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
   const [isEditing, setIsEditing] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false); // State for dialog visibility
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -95,7 +107,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
         id: id,
         campaignName: data.campaignName,
         campaignDescription: data.campaignDescription,
-        // Convert date objects back to ISO strings for submission
         startDate: data.startDate ? formatISO(data.startDate) : null,
         endDate: data.endDate ? formatISO(data.endDate) : null,
         digestCampaign: data.digestCampaign === "Yes",
@@ -105,14 +116,9 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
 
       await apiService.updateCampaign(id as any, formData);
 
-      toast({
-        variant: "success",
-        title: "Success",
-        description: "Campaign updated successfully.",
-      });
+      setIsSuccessDialogOpen(true); // Open the success dialog
 
       if (onUpdate) onUpdate();
-      navigate(0);
     } catch (error: any) {
       setError(error.message || "Failed to update campaign.");
       toast({
@@ -126,6 +132,10 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
   };
 
   const handleSubmit = form.handleSubmit(handleUpdateCampaign);
+
+  const toggleEditMode = () => {
+    setIsEditing(!isEditing);
+  };
 
   return (
     <Form {...form}>
@@ -287,14 +297,27 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
           name="dailyDigest"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Daily Digest</FormLabel>
+              <FormLabel>
+                Kindly select the time you want to receive daily digest
+              </FormLabel>
               <FormControl>
-                <Textarea
-                  className="min-h-24"
-                  disabled={!isEditing}
-                  placeholder="Daily Digest"
-                  {...field}
-                />
+                <Select
+                  disabled={!isEditing} // Condition to disable or enable based on editing state
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select an option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Frequency</SelectLabel>
+                      <SelectItem value="daily">Daily</SelectItem>
+                      <SelectItem value="weekly">Weekly</SelectItem>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -309,21 +332,22 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
             campaignName={campaign.campaignName}
             // onDelete={(id) => console.log(Deleted campaign with id: ${id})}
             trigger={
-              <Button variant="destructive" size="lg" width={"lg"}>
+              <Button
+                variant="destructive"
+                size="lg"
+                width={"lg"}
+                type="button"
+              >
                 Stop Campaign
               </Button>
             } // Custom trigger
-            onDelete={function (id: string): void {
-              throw new Error("Function not implemented.");
-            }}
           />
           <Button
             variant={isEditing ? "default" : "outline"}
             size="lg"
             width={"lg"}
-            onClick={
-              isEditing ? handleUpdateCampaign : () => setIsEditing(!isEditing)
-            }
+            type="button" // Change to type="button" to prevent form submission
+            onClick={isEditing ? handleSubmit : toggleEditMode}
           >
             {loading ? (
               <Icon
@@ -340,6 +364,11 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
           </Button>
         </div>
       </form>
+      <SuccessDialog
+        isOpen={isSuccessDialogOpen}
+        onClose={() => setIsSuccessDialogOpen(false)}
+        // onRedirect={() => navigate(0)} // Optional redirect callback
+      />
     </Form>
   );
 };
