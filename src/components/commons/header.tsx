@@ -92,7 +92,7 @@ const Header: React.FC = () => {
             </NavigationMenuTrigger>
 
             <NavigationMenuContent className="w-[100px] p-4 py-2 space-y-1 flex flex-col justify-center items-center">
-              <NavigationMenuLink className="text-muted-foreground hover:text-primary w-[100px] text-nowrap text-center text-sm">
+              <NavigationMenuLink className="text-black hover:text-primary w-[100px] text-nowrap text-center text-sm">
                 My Account
               </NavigationMenuLink>
               <Separator />
