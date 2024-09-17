@@ -68,7 +68,7 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
       </div>
 
       <DatePickerWithRange
-        className="ml-auto"
+        className="hidden ml-auto xl:block"
         onDateRangeChange={setDateRange}
       />
 
@@ -76,7 +76,7 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
         <DropdownMenuTrigger asChild>
           <Button
             variant="outlineSec"
-            className="items-center justify-center hidden ml-auto lg:flex"
+            className="items-center justify-center hidden lg:flex"
           >
             <span className="text-muted-foreground">Columns</span>
             <ChevronDownIcon className="w-6 h-6 ml-2" />

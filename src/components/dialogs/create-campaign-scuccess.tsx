@@ -20,7 +20,7 @@ export function SuccessDialog({ isOpen, onClose }: SuccessDialogProps) {
 
   const handleGoBack = () => {
     onClose(); // Close the dialog
-    navigate("/"); // Redirect to /campaign
+    navigate("/campaign"); // Redirect to /campaign
   };
 
   return (

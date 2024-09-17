@@ -123,7 +123,7 @@ export function FormComponent() {
   };
 
   const handleClick = () => {
-    navigate("/");
+    navigate("/"); // Navigate to the home page
   };
 
   return (
@@ -290,6 +290,7 @@ export function FormComponent() {
                 onClick={handleClick}
                 size="lg"
                 width={"lg"}
+                type="button"
               >
                 Cancel
               </Button>
