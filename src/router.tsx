@@ -43,6 +43,12 @@ const routes = [
     component: ErrorPage,
     layout: false, // Do not use DashboardLayout
   },
+  {
+    key: "404",
+    path: "*",
+    component: ErrorPage,
+    layout: false, // Do not use DashboardLayout
+  },
 ];
 
 // RouterConfig component
