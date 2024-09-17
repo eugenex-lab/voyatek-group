@@ -1,4 +1,3 @@
-// RouterConfig.tsx
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
@@ -10,29 +9,40 @@ import Campaign from "./pages/campaign";
 import Overview from "./pages/overview";
 import CreateCampaign from "./pages/create-campaign";
 import CampaignDetails from "./pages/campaign-details";
+import ErrorPage from "./pages/error";
 
-// Define route configuration
+// Define route configuration with layout flag
 const routes = [
   {
     key: "overview",
     path: "/",
     component: Overview,
+    layout: true, // Use DashboardLayout
   },
   {
     key: "campaign",
     path: "/campaign",
     component: Campaign,
+    layout: true, // Use DashboardLayout
   },
   {
     key: "create-campaign",
     path: "/create-campaign",
     component: CreateCampaign,
+    layout: true, // Use DashboardLayout
   },
   {
     key: "campaign-details",
     path: "/campaign/:id",
     component: CampaignDetails,
-  }, // New Route
+    layout: true, // Use DashboardLayout
+  },
+  {
+    key: "error",
+    path: "*",
+    component: ErrorPage,
+    layout: false, // Do not use DashboardLayout
+  },
 ];
 
 // RouterConfig component
@@ -40,14 +50,18 @@ const RouterConfig: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {routes.map(({ key, path, component: Component }) => (
+        {routes.map(({ key, path, component: Component, layout }) => (
           <Route
             key={key}
             path={path}
             element={
-              <DashboardLayout>
+              layout ? (
+                <DashboardLayout>
+                  <Component />
+                </DashboardLayout>
+              ) : (
                 <Component />
-              </DashboardLayout>
+              )
             }
           />
         ))}
