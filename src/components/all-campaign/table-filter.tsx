@@ -27,7 +27,7 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
   setDateRange,
 }) => {
   return (
-    <div className="flex flex-wrap items-center gap-4 py-4 lg:flex-nowrap">
+    <div className="flex flex-wrap items-center gap-4 py-4 ">
       <div className="flex flex-row items-center gap-2">
         {["All", "Active", "Inactive"].map((status) => {
           const statusCount =
