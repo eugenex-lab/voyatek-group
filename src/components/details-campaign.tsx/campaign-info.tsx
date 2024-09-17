@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { format, formatISO } from "date-fns";
-
+import { formatISO } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,13 +24,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Icon } from "@iconify/react";
-
 import DatePicker from "../create-campaign/form-date-picker";
-import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
-import { useNavigate, useParams } from "react-router-dom";
 import { KeywordInput } from "../create-campaign/keyword-input";
 import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
+import { useNavigate, useParams } from "react-router-dom";
+import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
 
 // Define the schema with zod for validation
 const formSchema = z.object({
@@ -47,7 +45,7 @@ const formSchema = z.object({
   endDate: z.date({
     required_error: "End Date is required.",
   }),
-  digestCampaign: z.boolean(),
+  digestCampaign: z.string(),
   linkedKeywords: z.array(z.string()).min(1, {
     message: "At least one keyword is required.",
   }),
@@ -75,7 +73,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       campaignDescription: campaign.campaignDescription || "",
       startDate: campaign.startDate ? new Date(campaign.startDate) : undefined,
       endDate: campaign.endDate ? new Date(campaign.endDate) : undefined,
-      digestCampaign: campaign.digestCampaign || false,
+      digestCampaign: campaign.digestCampaign === true ? "Yes" : "No",
       linkedKeywords: campaign.linkedKeywords || [],
       dailyDigest: campaign.dailyDigest || "",
     },
@@ -89,6 +87,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       console.log(`Campaign ID from URL params: ${id}`);
     }
   }, [id]);
+
   const handleUpdateCampaign = async (data: any) => {
     setLoading(true);
     try {
@@ -99,7 +98,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
         // Convert date objects back to ISO strings for submission
         startDate: data.startDate ? formatISO(data.startDate) : null,
         endDate: data.endDate ? formatISO(data.endDate) : null,
-        digestCampaign: data.digestCampaign === "yes",
+        digestCampaign: data.digestCampaign === "Yes",
         linkedKeywords: data.linkedKeywords,
         dailyDigest: data.dailyDigest || "",
       };
@@ -113,7 +112,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       });
 
       if (onUpdate) onUpdate();
-      // navigate(0);
+      navigate(0);
     } catch (error: any) {
       setError(error.message || "Failed to update campaign.");
       toast({
@@ -127,10 +126,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
   };
 
   const handleSubmit = form.handleSubmit(handleUpdateCampaign);
-
-  const handleDelete = async () => {
-    // Implementation for handleDelete
-  };
 
   return (
     <Form {...form}>
@@ -266,39 +261,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
               <FormControl>
                 <Select
                   disabled={!isEditing}
-                  value={field.value ? true : false} // Use "true"/"false" for display
-                  onValueChange={(value) => field.onChange(value === true)} // Convert to boolean
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select an option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Digest Options</SelectLabel>
-                      <SelectItem value="true">Yes</SelectItem>
-                      <SelectItem value="false">No</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Daily Digest Frequency */}
-        {/* Daily Digest Frequency */}
-        <FormField
-          control={form.control}
-          name="dailyDigest"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Kindly select the time you want to receive daily digest
-              </FormLabel>
-              <FormControl>
-                <Select
-                  disabled={!isEditing} // Condition to disable or enable based on editing state
                   value={field.value}
                   onValueChange={field.onChange}
                 >
@@ -307,10 +269,9 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Frequency</SelectLabel>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
+                      <SelectLabel>Digest Options</SelectLabel>
+                      <SelectItem value="Yes">Yes</SelectItem>
+                      <SelectItem value="No">No</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -320,29 +281,49 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
           )}
         />
 
+        {/* Daily Digest */}
+        <FormField
+          control={form.control}
+          name="dailyDigest"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Daily Digest</FormLabel>
+              <FormControl>
+                <Textarea
+                  className="min-h-24"
+                  disabled={!isEditing}
+                  placeholder="Daily Digest"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Action Buttons */}
         {/* Action Buttons */}
         <div className="flex justify-start gap-4 pt-14">
           <DeleteCampaignDialog
             campaignId={id as string} // Use the id from params here
             campaignName={campaign.campaignName}
-            onDelete={(id) => console.log(`Deleted campaign with id: ${id}`)}
+            // onDelete={(id) => console.log(Deleted campaign with id: ${id})}
             trigger={
-              <Button
-                variant="destructive"
-                size="lg"
-                width={"lg"}
-                onClick={handleDelete}
-              >
+              <Button variant="destructive" size="lg" width={"lg"}>
                 Stop Campaign
               </Button>
             } // Custom trigger
+            onDelete={function (id: string): void {
+              throw new Error("Function not implemented.");
+            }}
           />
           <Button
             variant={isEditing ? "default" : "outline"}
             size="lg"
             width={"lg"}
-            disabled={loading} // Disable the button during loading
-            onClick={isEditing ? handleSubmit : () => setIsEditing(!isEditing)}
+            onClick={
+              isEditing ? handleUpdateCampaign : () => setIsEditing(!isEditing)
+            }
           >
             {loading ? (
               <Icon
