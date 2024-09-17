@@ -11,7 +11,9 @@ const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    "data-state"?: string;
+  }
 >(({ className, children, ...props }, ref) => {
   return (
     <SelectPrimitive.Trigger

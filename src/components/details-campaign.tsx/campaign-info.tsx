@@ -28,7 +28,7 @@ import DatePicker from "../create-campaign/form-date-picker";
 import { KeywordInput } from "../create-campaign/keyword-input";
 import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
 import { SuccessDialog } from "../dialogs/create-campaign-scuccess";
 
@@ -44,11 +44,10 @@ const formSchema = z.object({
   campaignDescription: z.string().min(2, {
     message: "Campaign Description must be at least 2 characters.",
   }),
-  startDate: z
-    .date({
-      required_error: "Start Date is required.",
-    }),
-  
+  startDate: z.date({
+    required_error: "Start Date is required.",
+  }),
+
   endDate: z
     .date({
       required_error: "End Date is required.",
@@ -69,13 +68,10 @@ interface CampaignInfoProps {
   onStop?: () => void;
 }
 
-const CampaignInfo: React.FC<CampaignInfoProps> = ({
-  campaign,
-  onUpdate,
-  onStop,
-}) => {
+const CampaignInfo: React.FC<CampaignInfoProps> = ({ campaign, onUpdate }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  // @ts-ignore
   const [error, setError] = React.useState<string | null>(null);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false); // State for dialog visibility
   const form = useForm({
@@ -91,7 +87,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
     },
   });
 
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {

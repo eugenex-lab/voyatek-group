@@ -15,6 +15,7 @@ const SidebarMd = () => {
   const navigate = useNavigate();
   const [activeCampaignCount, setActiveCampaignCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  // @ts-ignore
   const [error, setError] = useState<string | null>(null);
 
   const handleClick = () => {

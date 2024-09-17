@@ -15,7 +15,9 @@ const CampaignDetails: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  // @ts-ignore
   const [isStatusUpdating, setIsStatusUpdating] = useState(false);
+  // @ts-ignore
   const [statusLoading, setStatusLoading] = useState(false);
 
   const fetchCampaignDetails = async () => {

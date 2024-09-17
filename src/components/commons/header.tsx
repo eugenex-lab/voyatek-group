@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { motion } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
 import SidebarMd from "@/components/commons/side-bar-md";
 import SidebarMobile from "./side-bar-mobile";
@@ -20,7 +19,6 @@ import {
 
 const Header: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleSidebarOpen = () => setIsSidebarOpen(true);
   const handleSidebarClose = () => setIsSidebarOpen(false);

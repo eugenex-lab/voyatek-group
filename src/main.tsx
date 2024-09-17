@@ -4,7 +4,7 @@ import "./index.css";
 import RouterConfig from "./router.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  // <StrictMode>
+   <StrictMode>
     <RouterConfig />
-  // </StrictMode>
+   </StrictMode>
 );

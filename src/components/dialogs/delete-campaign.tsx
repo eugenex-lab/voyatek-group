@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import  { useState, ReactNode } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,7 +22,7 @@ import { Icon } from "@iconify/react";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface DeleteCampaignDialogProps {
   campaignId: string;

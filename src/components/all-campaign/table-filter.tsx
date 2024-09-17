@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import { DateRange } from "react-day-picker";
 import { DatePickerWithRange } from "./datepicker-picker-range";
 
 interface TableFiltersProps {

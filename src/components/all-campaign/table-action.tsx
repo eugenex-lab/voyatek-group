@@ -30,10 +30,6 @@ export function TableActions({ campaign }: { campaign: Campaign }) {
     }
   };
 
-  const handleGoBack = () => {
-    // console.log("Go back action triggered.");
-  };
-
   const handleViewDetails = () => {
     navigate(`/campaign/${campaign.id}`); // Navigate to campaign details page
   };
@@ -74,7 +70,6 @@ export function TableActions({ campaign }: { campaign: Campaign }) {
                 campaignId={String(campaign.id)}
                 campaignName={campaign.campaignName || "Unnamed Campaign"}
                 onDelete={handleDelete}
-                onGoBack={handleGoBack}
               />
             </TooltipTrigger>
             <TooltipContent>
@@ -97,7 +92,6 @@ export function TableActions({ campaign }: { campaign: Campaign }) {
               campaignId={String(campaign.id)}
               campaignName={campaign.campaignName || "Unnamed Campaign"}
               onDelete={handleDelete}
-              onGoBack={handleGoBack}
             />
           </DropdownMenuItem>
         </DropdownMenuContent>

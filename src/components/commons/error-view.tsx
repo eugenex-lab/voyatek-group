@@ -13,7 +13,6 @@ type ErrorViewProps = {
 
 export const ErrorView: React.FC<ErrorViewProps> = ({
   errorMessage,
-  onRetry,
 }) => {
   const lottieRef = React.useRef(null);
   const { isPlaying, handleMouseEnter, handleMouseLeave } =
