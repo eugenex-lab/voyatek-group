@@ -15,7 +15,7 @@ const ErrorPage = () => {
           loop={true}
           animationData={lottieJson}
           play={true}
-          className="h-28 w-28"
+          className="w-48 h-48 md:w-64 md:h-64 lg:w-96 h-96"
         />
       </h1>
       <p className="mb-4 text-xl text-muted-foreground">
