@@ -133,7 +133,7 @@ export const apiService = {
   },
 
   // Add this method to apiService
-  async updateCampaign(id: string, data: any) {
+  async updateCampaign(id: number, data: any) {
     try {
       const response = await axios.put(`${BASE_URL}/api/Campaign/${id}`, data, {
         headers: {

@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { format, formatISO } from "date-fns";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,7 +28,7 @@ import { Icon } from "@iconify/react";
 
 import DatePicker from "../create-campaign/form-date-picker";
 import { DeleteCampaignDialog } from "../dialogs/delete-campaign";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { KeywordInput } from "../create-campaign/keyword-input";
 import { toast } from "@/hooks/use-toast";
 import { apiService } from "@/service/api-service";
@@ -42,7 +44,6 @@ const formSchema = z.object({
   startDate: z.date({
     required_error: "Start Date is required.",
   }),
-
   endDate: z.date({
     required_error: "End Date is required.",
   }),
@@ -72,43 +73,37 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
     defaultValues: {
       campaignName: campaign.campaignName || "",
       campaignDescription: campaign.campaignDescription || "",
-      startDate: campaign.startDate ? new Date(campaign.startDate) : undefined,
-      endDate: campaign.endDate ? new Date(campaign.endDate) : undefined,
-      digestCampaign: campaign.digestCampaign || "",
+      startDate: formatISO(new Date(campaign?.startDate)),
+      endDate: formatISO(new Date(campaign?.endDate)),
+      digestCampaign: campaign.digestCampaign || false,
       linkedKeywords: campaign.linkedKeywords || [],
       dailyDigest: campaign.dailyDigest || "",
     },
   });
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
 
-  // Get id from the URL params
-  const { id } = useParams<{ id: string }>(); // The id will be extracted from the URL
-
-  // Log or perform actions with the campaign id from URL
   useEffect(() => {
     if (id) {
       console.log(`Campaign ID from URL params: ${id}`);
-      // You can fetch the campaign details using the id here if necessary
     }
   }, [id]);
-
-  const handleUpdateCampaign = async () => {
+  const handleUpdateCampaign = async (data: any) => {
     setLoading(true);
     try {
-      // Prepare data to match the API request format
       const formData = {
-        id: id, // Use the ID from the URL params
-        campaignName: form.getValues("campaignName"),
-        campaignDescription: form.getValues("campaignDescription"),
-        startDate: form.getValues("startDate")!.toISOString(),
-        endDate: form.getValues("endDate")!.toISOString(),
-        digestCampaign: form.getValues("digestCampaign") === "yes", // Convert to boolean
-        linkedKeywords: form.getValues("linkedKeywords"),
-        dailyDigest: form.getValues("dailyDigest") || "",
+        id: id,
+        campaignName: data.campaignName,
+        campaignDescription: data.campaignDescription,
+        // Use formatISO to ensure ISO 8601 format
+        startDate: formatISO(new Date(data.startDate)),
+        endDate: formatISO(new Date(data.endDate)),
+        digestCampaign: data.digestCampaign === "yes",
+        linkedKeywords: data.linkedKeywords,
+        dailyDigest: data.dailyDigest || "",
       };
 
-      // Call the updateCampaign method
-      await apiService.updateCampaign(id as string, formData);
+      await apiService.updateCampaign(id as any, formData);
 
       toast({
         variant: "default",
@@ -117,8 +112,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       });
 
       if (onUpdate) onUpdate();
-
-      // Reload the page after successful update
       navigate(0);
     } catch (error: any) {
       setError(error.message || "Failed to update campaign.");
@@ -132,13 +125,17 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
     }
   };
 
-  const handleDelete = async () => {};
+  const handleSubmit = form.handleSubmit(handleUpdateCampaign);
+
+  const handleDelete = async () => {
+    // Implementation for handleDelete
+  };
 
   return (
     <Form {...form}>
       <form
         className="space-y-4 text-muted-foreground"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit} // Use handleSubmit to trigger validation and submission
       >
         {/* Campaign Name */}
         <FormField
@@ -209,7 +206,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
             )}
           />
         </div>
-        {/* Linked Keywords */}
+
         {/* Linked Keywords */}
         <FormField
           control={form.control}
@@ -223,7 +220,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
                 )}
               </FormLabel>
               <FormControl>
-                {/* If in editing mode, show interactive keyword input */}
                 {isEditing ? (
                   <KeywordInput
                     keywords={form.getValues("linkedKeywords")}
@@ -232,7 +228,6 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
                     }
                   />
                 ) : (
-                  // When not editing, show keywords in a disabled view
                   <div
                     className={`flex flex-wrap p-1 border rounded-md min-h-24 bg-transparent cursor-not-allowed opacity-50`}
                   >
@@ -268,8 +263,8 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
               <FormControl>
                 <Select
                   disabled={!isEditing}
-                  value={field.value}
-                  onValueChange={field.onChange}
+                  value={field.value ? true : false} // Use "true"/"false" for display
+                  onValueChange={(value) => field.onChange(value === true)} // Convert to boolean
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select an option" />
@@ -277,8 +272,8 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Digest Options</SelectLabel>
-                      <SelectItem value="yes">Yes</SelectItem>
-                      <SelectItem value="no">No</SelectItem>
+                      <SelectItem value="true">Yes</SelectItem>
+                      <SelectItem value="false">No</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -288,6 +283,7 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
           )}
         />
 
+        {/* Daily Digest Frequency */}
         {/* Daily Digest Frequency */}
         <FormField
           control={form.control}
@@ -299,16 +295,16 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
               </FormLabel>
               <FormControl>
                 <Select
-                  disabled
+                  disabled={!isEditing} // Condition to disable or enable based on editing state
                   value={field.value}
                   onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select" />
+                    <SelectValue placeholder="Select an option" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Daily Digest Frequency</SelectLabel>
+                      <SelectLabel>Frequency</SelectLabel>
                       <SelectItem value="daily">Daily</SelectItem>
                       <SelectItem value="weekly">Weekly</SelectItem>
                       <SelectItem value="monthly">Monthly</SelectItem>

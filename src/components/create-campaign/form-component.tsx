@@ -33,27 +33,45 @@ import { KeywordInput } from "./keyword-input";
 import { SuccessDialog } from "../dialogs/create-campaign-scuccess";
 import { toast } from "@/hooks/use-toast";
 
-// Form schema definition
-const formSchema = z.object({
-  campaignName: z.string().min(2, {
-    message: "Campaign Name must be at least 2 characters.",
-  }),
-  campaignDescription: z.string().min(2, {
-    message: "Campaign Description must be at least 2 characters.",
-  }),
-  startDate: z.date({
-    required_error: "Start Date is required.",
-  }),
+import { addDays } from "date-fns"; // If you're using date-fns for date manipulation
 
-  endDate: z.date({
-    required_error: "End Date is required.",
-  }),
-  digestCampaign: z.boolean(),
-  linkedKeywords: z.array(z.string()).min(1, {
-    message: "At least one keyword is required.",
-  }),
-  dailyDigest: z.string().optional(),
-});
+// Get today's date and set time to 00:00:00 for comparison
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+// Form schema definition
+const formSchema = z
+  .object({
+    campaignName: z.string().min(2, {
+      message: "Campaign Name must be at least 2 characters.",
+    }),
+    campaignDescription: z.string().min(2, {
+      message: "Campaign Description must be at least 2 characters.",
+    }),
+    startDate: z
+      .date({
+        required_error: "Start Date is required.",
+      })
+      .refine((date) => date >= today, {
+        message: "Start Date cannot be in the past.",
+      }),
+    endDate: z
+      .date({
+        required_error: "End Date is required.",
+      })
+      .refine((date) => date >= today, {
+        message: "End Date cannot be in the past.",
+      }),
+    digestCampaign: z.boolean(),
+    linkedKeywords: z.array(z.string()).min(1, {
+      message: "At least one keyword is required.",
+    }),
+    dailyDigest: z.string().optional(),
+  })
+  .refine((data) => data.startDate <= data.endDate, {
+    message: "Start Date cannot be after End Date.",
+    path: ["endDate"], // Assign error message to the endDate field
+  });
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -99,7 +117,7 @@ export function FormComponent() {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: errorMsg, // This will now be "One or more validation errors occurred."
+        description: errorMsg,
       });
     } finally {
       setTimeout(() => setIsLoading(false), minimumLoadingTime);

@@ -20,10 +20,6 @@ interface SuccessDialogProps {
 export function SuccessDialog({ isOpen, onClose }: SuccessDialogProps) {
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const lottieRef = useRef(null);
-  const { isPlaying, handleMouseEnter, handleMouseLeave } =
-    useLottieAnimation(12000);
-
   const handleGoBack = () => {
     onClose(); // Close the dialog
     navigate("/campaign"); // Redirect to /campaign
@@ -35,10 +31,9 @@ export function SuccessDialog({ isOpen, onClose }: SuccessDialogProps) {
         <DialogHeader>
           <DialogDescription className="flex flex-col items-center">
             <Lottie
-              loop={isPlaying}
+              loop={true}
               animationData={lottieJson}
-              play={isPlaying}
-              ref={lottieRef}
+              play={true} // Simplified to always play
               className="h-28 w-28"
             />
             <p className="mt-4">Campaign Successfully Created!</p>
