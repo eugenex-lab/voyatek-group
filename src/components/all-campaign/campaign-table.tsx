@@ -21,12 +21,12 @@ import {
 } from "@/components/ui/table";
 import { TableLoader } from "./table-loading";
 import { useLottieAnimation } from "@/lib/utils/lottie-animation";
-
 import { apiService } from "@/service/api-service";
 import { TableFilters } from "./table-filter";
 import { columns } from "./column-table";
 import { ErrorView } from "../commons/error-view";
 import { useNavigate } from "react-router-dom";
+import { DateRange } from "react-day-picker";
 
 export type Campaign = {
   id: number;
@@ -50,6 +50,9 @@ export function DataTable() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [statusFilter, setStatusFilter] = React.useState<string | null>(null);
+  const [dateRange, setDateRange] = React.useState<DateRange | undefined>(
+    undefined
+  );
   const navigate = useNavigate();
 
   useLottieAnimation(12000);
@@ -57,6 +60,7 @@ export function DataTable() {
   const handleClick = () => {
     setData(fetchedData);
     setStatusFilter(null);
+    setDateRange(undefined);
     setLoading(true);
     navigate(0);
   };
@@ -78,16 +82,24 @@ export function DataTable() {
   }, []);
 
   React.useEffect(() => {
+    let filteredData = fetchedData;
+
     if (statusFilter) {
-      setData(
-        fetchedData.filter(
-          (campaign) => campaign.campaignStatus === statusFilter
-        )
+      filteredData = filteredData.filter(
+        (campaign) => campaign.campaignStatus === statusFilter
       );
-    } else {
-      setData(fetchedData);
     }
-  }, [statusFilter, fetchedData]);
+
+    if (dateRange) {
+      const { from, to } = dateRange;
+      filteredData = filteredData.filter((campaign) => {
+        const campaignDate = new Date(campaign.startDate);
+        return (!from || campaignDate >= from) && (!to || campaignDate <= to);
+      });
+    }
+
+    setData(filteredData);
+  }, [statusFilter, dateRange, fetchedData]);
 
   const table = useReactTable({
     data,
@@ -116,8 +128,8 @@ export function DataTable() {
         table={table}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
-        data={data}
         fetchedData={fetchedData}
+        setDateRange={setDateRange}
       />
       <div className="min-h-40">
         <Table>

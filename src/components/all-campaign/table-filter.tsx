@@ -8,31 +8,30 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { DatePickerWithRange } from "../overview/range-date-range-picker";
+import { DatePickerWithRange } from "./datepicker-picker-range";
 
 interface TableFiltersProps {
   table: Table<any>;
   statusFilter: string | null;
   setStatusFilter: (status: string | null) => void;
-  data: any[]; // Make sure to type this correctly according to your data structure
   fetchedData: any[];
+  setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
 }
 
 export const TableFilters: React.FC<TableFiltersProps> = ({
   table,
   statusFilter,
   setStatusFilter,
-  data,
   fetchedData,
+  setDateRange,
 }) => {
   return (
     <div className="flex flex-wrap items-center gap-4 py-4 lg:flex-nowrap">
       <div className="flex flex-row items-center gap-2">
         {["All", "Active", "Inactive"].map((status) => {
-          // Count the number of campaigns for each status based on the original fetched data
           const statusCount =
             status === "All"
-              ? fetchedData.length // All campaigns
+              ? fetchedData.length
               : fetchedData.filter(
                   (campaign) => campaign.campaignStatus === status
                 ).length;
@@ -68,17 +67,19 @@ export const TableFilters: React.FC<TableFiltersProps> = ({
         <Search className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
       </div>
 
-      <DatePickerWithRange className="ml-auto" />
-      {/* Add any other necessary controls */}
+      <DatePickerWithRange
+        className="ml-auto"
+        onDateRangeChange={setDateRange}
+      />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
+            variant="outlineSec"
             className="items-center justify-center hidden ml-auto lg:flex"
           >
-            <span>Columns</span>
-            <ChevronDownIcon className="w-4 h-4 ml-2" />
+            <span className="text-muted-foreground">Columns</span>
+            <ChevronDownIcon className="w-6 h-6 ml-2" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

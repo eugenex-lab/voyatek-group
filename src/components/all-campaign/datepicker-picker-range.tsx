@@ -25,13 +25,7 @@ export function DatePickerWithRange({
   showExportButton = false,
   onDateRangeChange,
 }: DatePickerWithRangeProps) {
-  const [date, setDate] = React.useState<DateRange | undefined>(() => {
-    const today = new Date();
-    return {
-      from: today,
-      to: addDays(today, 2),
-    };
-  });
+  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
 
   React.useEffect(() => {
     if (onDateRangeChange) {
@@ -70,7 +64,7 @@ export function DatePickerWithRange({
                     format(date.from, "LLL dd, y")
                   )
                 ) : (
-                  <span>Pick a date</span>
+                  <span className="text-muted-foreground">Pick a date</span>
                 )}
               </span>
               <Icon
@@ -95,7 +89,6 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
