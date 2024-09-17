@@ -123,7 +123,7 @@ export function DataTable() {
   if (error) return <ErrorView errorMessage={error} onRetry={handleClick} />;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full space-y-4">
       <TableFilters
         table={table}
         statusFilter={statusFilter}

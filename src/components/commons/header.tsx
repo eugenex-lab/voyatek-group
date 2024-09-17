@@ -16,6 +16,7 @@ import {
   NavigationMenuContent,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu";
+import ThemeToggle from "./theme-toggle";
 
 const Header: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -42,7 +43,6 @@ const Header: React.FC = () => {
           <SidebarMobile onClose={handleSidebarClose} />
         </SheetContent>
       </Sheet>
-
       <div className="flex-1 w-full">
         <form>
           <div className="relative md:w-2/3 lg:w-1/3">
@@ -56,6 +56,9 @@ const Header: React.FC = () => {
         </form>
       </div>
 
+      <ThemeToggle />
+      <Separator className="h-8" orientation="vertical" />
+
       <Button
         size="icon"
         variant={"ghost"}
@@ -64,9 +67,7 @@ const Header: React.FC = () => {
         <Bell className="w-5 h-5" color="#333333" />
         <span className="sr-only">Toggle notifications</span>
       </Button>
-
       <Separator className="h-8" orientation="vertical" />
-
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

@@ -30,6 +30,10 @@ export function TableActions({ campaign }: { campaign: Campaign }) {
     }
   };
 
+  const handleEditDetails = () => {
+    navigate(`/campaign/${campaign.id}?edit=true`); // Navigate to campaign details page
+  };
+
   const handleViewDetails = () => {
     navigate(`/campaign/${campaign.id}`); // Navigate to campaign details page
   };
@@ -53,7 +57,7 @@ export function TableActions({ campaign }: { campaign: Campaign }) {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost">
+              <Button variant="ghost" onClick={handleEditDetails}>
                 <Icon icon="mage:edit" width="24" height="24" />
               </Button>
             </TooltipTrigger>

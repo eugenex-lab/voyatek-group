@@ -71,6 +71,7 @@ interface CampaignInfoProps {
 const CampaignInfo: React.FC<CampaignInfoProps> = ({ campaign, onUpdate }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
   // @ts-ignore
   const [error, setError] = React.useState<string | null>(null);
   const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false); // State for dialog visibility
@@ -88,6 +89,14 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({ campaign, onUpdate }) => {
   });
 
   const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    // Extract the query string from the URL
+    const queryParams = new URLSearchParams(location.search);
+    // Check if the 'edit' query parameter is set to 'true'
+    const editParam = queryParams.get("edit") === "true";
+    setIsEditing(editParam);
+  }, [location.search]);
 
   useEffect(() => {
     if (id) {
