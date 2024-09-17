@@ -1,4 +1,4 @@
-import { KeyboardEvent } from "react";
+import React, { KeyboardEvent, useState, useRef } from "react";
 import { FormControl, FormItem } from "@/components/ui/form";
 import { X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
@@ -16,19 +16,26 @@ export function KeywordInput({
   setFormValue,
   name,
 }: KeywordInputProps) {
+  const [inputValue, setInputValue] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleKeywordInput = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      const input = event.target as HTMLTextAreaElement;
-      const keyword = input.value.trim();
+      const keyword = inputValue.trim();
 
       if (keyword && !keywords.includes(keyword)) {
         const newKeywords = [...keywords, keyword];
         setKeywords(newKeywords);
         setFormValue(name, newKeywords);
-        input.value = "";
+        setInputValue(""); // Clear the input field after adding the keyword
+        textareaRef.current?.focus(); // Optional: Refocus the textarea
       }
     }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(event.target.value);
   };
 
   const deleteKeyword = (keywordToDelete: string) => {
@@ -43,20 +50,23 @@ export function KeywordInput({
     <FormItem>
       <FormControl>
         <Textarea
-          className=""
+          ref={textareaRef}
           placeholder="Press Enter to add keywords"
-          onKeyPress={handleKeywordInput}
+          value={inputValue}
+          onChange={handleChange}
+          onKeyDown={handleKeywordInput}
+          rows={2}
         />
       </FormControl>
-      <div className="mt-2">
+      <div className="flex flex-wrap gap-2 mt-2">
         {keywords.map((keyword, index) => (
           <span
             key={index}
-            className="inline-flex items-center px-3 py-1 mb-2 mr-2 text-sm text-gray-700 bg-gray-200 rounded-full"
+            className="inline-flex items-center px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-full"
           >
             {keyword}
             <X
-              className="w-4 h-4 ml-2 cursor-pointer text-des hover:text-gray-700 text-destructive"
+              className="w-4 h-4 ml-2 cursor-pointer text-destructive hover:text-gray-700"
               onClick={() => deleteKeyword(keyword)}
             />
           </span>

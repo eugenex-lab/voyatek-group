@@ -73,13 +73,14 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
     defaultValues: {
       campaignName: campaign.campaignName || "",
       campaignDescription: campaign.campaignDescription || "",
-      startDate: formatISO(new Date(campaign?.startDate)),
-      endDate: formatISO(new Date(campaign?.endDate)),
+      startDate: campaign.startDate ? new Date(campaign.startDate) : undefined,
+      endDate: campaign.endDate ? new Date(campaign.endDate) : undefined,
       digestCampaign: campaign.digestCampaign || false,
       linkedKeywords: campaign.linkedKeywords || [],
       dailyDigest: campaign.dailyDigest || "",
     },
   });
+
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -95,9 +96,9 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
         id: id,
         campaignName: data.campaignName,
         campaignDescription: data.campaignDescription,
-        // Use formatISO to ensure ISO 8601 format
-        startDate: formatISO(new Date(data.startDate)),
-        endDate: formatISO(new Date(data.endDate)),
+        // Convert date objects back to ISO strings for submission
+        startDate: data.startDate ? formatISO(data.startDate) : null,
+        endDate: data.endDate ? formatISO(data.endDate) : null,
         digestCampaign: data.digestCampaign === "yes",
         linkedKeywords: data.linkedKeywords,
         dailyDigest: data.dailyDigest || "",
@@ -106,13 +107,13 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
       await apiService.updateCampaign(id as any, formData);
 
       toast({
-        variant: "default",
+        variant: "success",
         title: "Success",
         description: "Campaign updated successfully.",
       });
 
       if (onUpdate) onUpdate();
-      navigate(0);
+      // navigate(0);
     } catch (error: any) {
       setError(error.message || "Failed to update campaign.");
       toast({
@@ -226,6 +227,8 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
                     setKeywords={(updatedKeywords: string[]) =>
                       form.setValue("linkedKeywords", updatedKeywords)
                     }
+                    setFormValue={form.setValue}
+                    name="linkedKeywords"
                   />
                 ) : (
                   <div
@@ -338,9 +341,8 @@ const CampaignInfo: React.FC<CampaignInfoProps> = ({
             variant={isEditing ? "default" : "outline"}
             size="lg"
             width={"lg"}
-            onClick={
-              isEditing ? handleUpdateCampaign : () => setIsEditing(!isEditing)
-            }
+            disabled={loading} // Disable the button during loading
+            onClick={isEditing ? handleSubmit : () => setIsEditing(!isEditing)}
           >
             {loading ? (
               <Icon
