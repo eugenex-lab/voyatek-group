@@ -1,11 +1,13 @@
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { DatePickerWithRange } from "@/components/overview/range-date-range-picker";
 import { Plus } from "lucide-react";
 import Lottie from "react-lottie-player";
 import lottieJson from "@/assets/json/empty-state.json";
 import { useNavigate } from "react-router-dom";
 import { useLottieAnimation } from "@/lib/utils/lottie-animation";
+import BannerWithButton from "@/components/all-campaign/banner-with-button";
+import TripPlanner from "@/components/all-campaign/trip-planner";
+import FlightItinerary from "@/components/all-campaign/flight-itinerary";
 
 const Overview = () => {
   const lottieRef = useRef(null);
@@ -18,17 +20,14 @@ const Overview = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-between w-full gap-4 md:flex-row">
-        <h1 className="text-lg font-bold md:text-2xl text-primary">Overview</h1>
-        <div>
-          <DatePickerWithRange showExportButton />
-        </div>
-      </div>
+    <div className="bg-white ">
+      <BannerWithButton imageUrl="https://res.cloudinary.com/deuhwohof/image/upload/v1733590423/voyateck/banner_uy9x1c.png" />
+      <TripPlanner />
 
+      <FlightItinerary />
       <div className="flex items-center justify-center flex-1 border rounded-lg shadow-sm">
         <div
-          className="flex flex-col items-center gap-1 p-5 text-center lg:mb-20"
+          className="flex flex-col items-center gap-1 p-6 text-center lg:mb-20"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -45,14 +44,14 @@ const Overview = () => {
           </p>
           <Button
             onClick={handleClick}
-            className="flex items-center mt-2 mb-6 space-x-2 lg:mt-3"
+            className="flex items-center justify-center mt-2 mb-6 space-x-2 lg:mt-3"
           >
             <Plus className="w-5 h-5 text-white" />
             <span>New Campaign</span>
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -13,17 +13,15 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const location = useLocation();
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <SidebarMd />
-
-      <div className="flex flex-col w-full">
+    <div className="grid min-h-screen w-full md:grid-row-[220px_1fr] lg:grid-row-[280px_1fr] bg-background">
+      <Header />
+      <div className="flex flex-row w-full p-6">
         {/* Use the new Header component here */}
-        <Header />
-
+        <SidebarMd />
         <AnimatePresence mode="wait">
           <motion.main
             key={location.pathname}
-            className="flex flex-col flex-1 gap-4 p-6 lg:gap-10 lg:p-10"
+            className="flex flex-col flex-1 gap-4 p-4 md:ml-8 bg-foreground"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}

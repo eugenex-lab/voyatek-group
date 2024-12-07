@@ -17,21 +17,22 @@ const buttonVariants = cva(
           "border border-primary bg-background shadow-sm hover:bg-accent hover:text-accent-foreground text-primary",
         outlineSec: "border-[0.2px] bg-background shadow-sm  text-primary",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-primary hover:text-primary-foreground",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "bg-foreground text-primary shadow-sm hover:bg-primary hover:text-primary-foreground",
+        ghost: " hover:text-accent-foreground text-muted-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         muted:
-          "border-[0.2px] border focus:bg-accent focus:text-accent-foreground",
+          "hover:text-accent-foreground text-muted-foreground bg-foreground/20",
       },
       size: {
-        default: "h-9 px-4 py-2",
+        default: " px-4 py-2",
+        ghost: "p-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
       },
       width: {
-        default: "",
-        sm: "",
+        default: "w-full",
+        sm: "w-8",
         md: "w-36",
         lg: "w-full md:w-52",
         icon: "w-9",

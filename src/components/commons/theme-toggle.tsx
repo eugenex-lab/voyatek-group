@@ -26,7 +26,7 @@ const ThemeToggle = () => {
         icon={theme === "dark" ? "fa6-solid:moon" : "iconamoon:mode-light-bold"}
         width="24"
         height="24"
-        className={theme === "dark" ? "text-white" : "text-black"}
+        className={theme === "dark" ? "text-white" : "text-muted-foreground"}
       />
     </Button>
   );
