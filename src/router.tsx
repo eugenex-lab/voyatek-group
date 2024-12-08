@@ -21,19 +21,19 @@ const routes = [
   },
   {
     key: "campaign",
-    path: "/campaign",
+    path: "/",
     component: Campaign,
     layout: true, // Use DashboardLayout
   },
   {
     key: "create-campaign",
-    path: "/create-campaign",
+    path: "/",
     component: CreateCampaign,
     layout: true, // Use DashboardLayout
   },
   {
     key: "campaign-details",
-    path: "/campaign/:id",
+    path: "/",
     component: CampaignDetails,
     layout: true, // Use DashboardLayout
   },

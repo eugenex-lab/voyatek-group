@@ -2,9 +2,9 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import { Progress } from "../ui/progress";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
-import { Badge } from "lucide-react";
 import { Card } from "../ui/card";
+import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 
 interface Flight {
   id: number;
@@ -23,12 +23,12 @@ interface Flight {
 
 const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
   return (
-    <Card key={flight.id} className="flex justify-between py-0 mb-4">
+    <Card key={flight.id} className="flex justify-between py-0 mb-4 ">
       <div className="w-full">
         <div className="flex items-center justify-between p-4">
           <div>
             <h5 className="text-xl font-bold">{flight.airline}</h5>
-            <p className="text-sm text-muted-foreground">
+            <p className="flex items-center text-sm text-muted-foreground">
               {flight.flightNumber} ·{" "}
               <Badge className="bg-[#0A369D]">{flight.class}</Badge>
             </p>
@@ -45,7 +45,9 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
               </p>
               <Icon icon="mingcute:flight-land-line" />
             </div>
+
             <Progress value={33} />
+
             <div className="flex items-center justify-between w-96">
               <h5 className="font-bold text-[18px]">{flight.departureCode}</h5>
               <p className="text-sm text-muted-foreground">Direct</p>
@@ -68,18 +70,43 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
           </p>
         </div>
         <Separator />
+
         <div className="flex justify-between p-4 text-sm text-muted-foreground">
-          <Button variant="link" size="icon">
-            Flight details
-          </Button>
-          <Button variant="link" size="icon">
-            Price details
-          </Button>
-          <Button variant="link" size="icon">
+          <div className="flex items-center-start items-c text-primary">
+            <Button
+              variant="link"
+              size="icon"
+              width={"md"}
+              className="justify-start px-0"
+            >
+              Flight details
+            </Button>
+            <Button
+              variant="link"
+              size="icon"
+              width={"md"}
+              className="justify-start px-0"
+            >
+              Price details
+            </Button>
+          </div>
+
+          <Button
+            variant="link"
+            size="icon"
+            width={"md"}
+            className="justify-end px-0 "
+          >
             Edit details
           </Button>
         </div>
       </div>
+      <Button
+        className="w-6 bg-[#FBEAE9] rounded-none "
+        variant={"destructive"}
+      >
+        X
+      </Button>
     </Card>
   );
 };

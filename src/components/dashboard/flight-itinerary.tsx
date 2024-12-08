@@ -2,20 +2,25 @@ import React, { useEffect, useRef, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Icon } from "@iconify/react";
-import { Progress } from "../ui/progress";
 import { apiService } from "@/service/api-service";
+import FlightCard from "./flight-card";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 const FlightItinerary: React.FC = () => {
-  const [query, setQuery] = useState("");
-  const [flights, setFlights] = useState([]);
-  const [selectedCity, setSelectedCity] = useState<{
+  const [fromCity, setFromCity] = useState<{
     city: string;
     code: string;
   } | null>(null);
-
-  const [isOpen, setIsOpen] = useState(false);
+  const [toCity, setToCity] = useState<{ city: string; code: string } | null>(
+    null
+  );
+  const [isOpenFrom, setIsOpenFrom] = useState(false);
+  const [isOpenTo, setIsOpenTo] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownItems, setDropdownItems] = useState([
     { city: "Lagos", code: "LOS" },
@@ -27,28 +32,44 @@ const FlightItinerary: React.FC = () => {
     { city: "Tokyo", code: "HND" },
     { city: "Dubai", code: "DXB" },
   ]);
+  const [date, setDate] = React.useState<Date>();
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const [date2, setDate2] = React.useState<Date>();
+
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const toggleDropdownFrom = () => {
+    setIsOpenFrom(!isOpenFrom);
   };
 
-  const handleSelectCity = (item: { city: string; code: string }) => {
-    setSelectedCity(item);
-    setIsOpen(false);
+  const toggleDropdownTo = () => {
+    setIsOpenTo(!isOpenTo);
+  };
+
+  const handleSelectCity = (
+    item: { city: string; code: string },
+    type: "from" | "to"
+  ) => {
+    if (type === "from") {
+      setFromCity(item);
+    } else {
+      setToCity(item);
+    }
+    setIsOpenFrom(false);
+    setIsOpenTo(false);
   };
 
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
 
     if (e.target.value.length >= 3) {
-      // Trigger search after 3 characters
       try {
         const query = e.target.value;
         const results = await apiService.searchFlightDestinations(query);
 
         if (results.status) {
-          const filteredCities = results.data
-            .filter((item) => item.type === "CITY") // Only include cities
+          const filteredCities = (results.data as any[])
+            .filter((item) => item.type === "CITY")
             .map((item) => ({
               city: item.name,
               code: item.code,
@@ -59,7 +80,6 @@ const FlightItinerary: React.FC = () => {
         console.error("Error fetching destinations:", error);
       }
     } else {
-      // Reset to default values when search term is less than 3 characters
       setDropdownItems([
         { city: "Lagos", code: "LOS" },
         { city: "Ibadan", code: "IBA" },
@@ -73,15 +93,14 @@ const FlightItinerary: React.FC = () => {
     }
   };
 
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        setIsOpenFrom(false);
+        setIsOpenTo(false);
       }
     };
 
@@ -92,29 +111,9 @@ const FlightItinerary: React.FC = () => {
     };
   }, []);
 
-  const flight = [
+  const flightData = [
     {
       id: 1,
-      airline: "American Airlines",
-      flightNumber: "AA-829",
-      class: "First Class",
-      departureTime: "08:35",
-      arrivalTime: "09:55",
-      date: "Sun, 20 Aug",
-      duration: "1h 45m",
-      departureCode: "LOS",
-      arrivalCode: "SIN",
-      price: "₦123,450.00",
-      facilities: [
-        "Baggage: 20kg, Cabin Baggage: 8kg",
-        "In flight entertainment",
-        "In flight meal",
-        "USB Port",
-      ],
-    },
-    // Duplicate data for example purposes
-    {
-      id: 2,
       airline: "American Airlines",
       flightNumber: "AA-829",
       class: "First Class",
@@ -170,13 +169,13 @@ const FlightItinerary: React.FC = () => {
             <CardTitle className="flex items-center gap-2">
               <Icon icon="ph:airplane-in-flight" width="24" height="24" />
               <span>Flights</span>
-              <div className="pl-4">
+              <div className="flex gap-2 pl-4">
+                {/* From Dropdown */}
                 <div className="flex items-center justify-center ">
                   <div className="relative group">
-                    {/* Dropdown Button */}
                     <button
-                      onClick={toggleDropdown}
-                      className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px]"
+                      onClick={toggleDropdownFrom}
+                      className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px]"
                     >
                       <div className="flex flex-row items-center w-full gap-2">
                         <Icon
@@ -187,15 +186,13 @@ const FlightItinerary: React.FC = () => {
                         />
                         <div className="flex flex-col items-start">
                           <span className="mr-2 text-muted-foreground">
-                            From{" "}
+                            From
                           </span>
                           <span className="mr-2 ">
-                            {selectedCity ? (
+                            {fromCity ? (
                               <>
-                                <span className="mr-2 ">
-                                  {selectedCity.city}
-                                </span>
-                                <Badge>{selectedCity.code}</Badge>
+                                <span className="mr-2 ">{fromCity.city}</span>
+                                <Badge>{fromCity.code}</Badge>
                               </>
                             ) : (
                               <span className="mr-2">Enter City</span>
@@ -205,13 +202,12 @@ const FlightItinerary: React.FC = () => {
                       </div>
                     </button>
 
-                    {/* Dropdown Menu */}
-                    {isOpen && (
+                    {/* From Dropdown Menu */}
+                    {isOpenFrom && (
                       <div
                         ref={dropdownRef}
                         className="absolute right-0 z-50 p-1 mt-2 space-y-1 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
                       >
-                        {/* Search Input */}
                         <input
                           type="text"
                           value={searchTerm}
@@ -219,11 +215,9 @@ const FlightItinerary: React.FC = () => {
                           placeholder="Search location"
                           className="block w-full px-4 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none"
                         />
-
-                        {/* Filtered Dropdown Items */}
                         {dropdownItems.map((item, index) => (
                           <a
-                            onClick={() => handleSelectCity(item)}
+                            onClick={() => handleSelectCity(item, "from")}
                             key={index}
                             href="#"
                             className="flex justify-between px-4 py-2 text-gray-700 rounded-md cursor-pointer hover:bg-gray-100 active:bg-blue-100"
@@ -235,120 +229,131 @@ const FlightItinerary: React.FC = () => {
                     )}
                   </div>
                 </div>
+
+                {/* To Dropdown */}
+                <div className="flex items-center justify-center ">
+                  <div className="relative group">
+                    <button
+                      onClick={toggleDropdownTo}
+                      className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px]"
+                    >
+                      <div className="flex flex-row items-center w-full gap-2">
+                        <Icon
+                          icon="mingcute:flight-takeoff-line"
+                          width="24"
+                          height="24"
+                          className="text-muted-foreground"
+                        />
+                        <div className="flex flex-col items-start">
+                          <span className="mr-2 text-muted-foreground">To</span>
+                          <span className="mr-2 ">
+                            {toCity ? (
+                              <>
+                                <span className="mr-2 ">{toCity.city}</span>
+                                <Badge>{toCity.code}</Badge>
+                              </>
+                            ) : (
+                              <span className="mr-2">Enter City</span>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* To Dropdown Menu */}
+                    {isOpenTo && (
+                      <div
+                        ref={dropdownRef}
+                        className="absolute right-0 z-50 p-1 mt-2 space-y-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
+                      >
+                        <input
+                          type="text"
+                          value={searchTerm}
+                          onChange={handleSearch}
+                          placeholder="Search location"
+                          className="block w-full px-4 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none"
+                        />
+                        {dropdownItems.map((item, index) => (
+                          <a
+                            onClick={() => handleSelectCity(item, "to")}
+                            key={index}
+                            href="#"
+                            className="flex justify-between px-4 py-2 text-gray-700 rounded-md cursor-pointer hover:bg-gray-100 active:bg-blue-100"
+                          >
+                            {item.city} <Badge>{item.code}</Badge>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[200px] justify-start text-left font-normal border-none bg-white border-muted-foreground rounded-md shadow-lg ring-1 ring-black ring-opacity-5 space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <div className="flex space-x-1.5 items-center">
+                        <CalendarIcon />
+                        {date ? (
+                          format(date, "PPP")
+                        ) : (
+                          <span>Pick Departure </span>
+                        )}
+                      </div>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[200px] justify-start text-left font-normal border-none bg-white border-muted-foreground rounded-md shadow-lg ring-1 ring-black ring-opacity-5 space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <div className="flex space-x-1.5 items-center">
+                        <CalendarIcon />
+                        {date ? (
+                          format(date, "PPP")
+                        ) : (
+                          <span>Pick Departure </span>
+                        )}
+                      </div>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date2}
+                      onSelect={setDate2}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Button width={"md"}>Search</Button>
               </div>
             </CardTitle>
-            <Button variant="secondary" width={"md"}>
-              Add Flights
-            </Button>
           </CardHeader>
 
           <CardContent className="max-h-[600px] flex  ">
             <div className="w-full overflow-y-scroll">
-              {flight.map((flight) => (
-                <Card
-                  key={flight.id}
-                  className="flex justify-between py-0 mb-4 "
-                >
-                  <div className="w-full">
-                    <div className="flex items-center justify-between p-4">
-                      <div>
-                        <h5 className="text-xl font-bold">{flight.airline}</h5>
-                        <p className="text-sm text-muted-foreground">
-                          {flight.flightNumber} ·{" "}
-                          <Badge variant="outline" className="bg-[#0A369D]">
-                            {flight.class}
-                          </Badge>
-                        </p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-lg font-bold">
-                          {flight.departureTime}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {flight.date}
-                        </p>
-                      </div>
-                      <div className="space-y-1.5 text-center">
-                        <div className="flex items-center justify-between w-96">
-                          <Icon icon="mingcute:flight-takeoff-line" />
-                          <p className="text-sm text-muted-foreground">
-                            Duration: {flight.duration}
-                          </p>
-                          <Icon icon="mingcute:flight-land-line" />
-                        </div>
-
-                        <Progress value={33} />
-
-                        <div className="flex items-center justify-between w-96">
-                          <h5 className="font-bold text-[18px]">
-                            {flight.departureCode}
-                          </h5>
-                          <p className="text-sm text-muted-foreground">
-                            Direct
-                          </p>
-                          <h5 className="font-bold text-[18px]">
-                            {flight.arrivalCode}
-                          </h5>
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-lg font-bold">
-                          {flight.arrivalTime}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {flight.date}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-2xl font-bold">{flight.price}</p>
-                      </div>
-                    </div>
-                    <Separator />
-                    <div className="p-4 text-sm text-muted-foreground">
-                      <p className="mb-2">
-                        <span className="font-bold">Facilities:</span>{" "}
-                        {flight.facilities.join(", ")}
-                      </p>
-                    </div>
-                    <Separator />
-
-                    <div className="flex justify-between p-4 text-sm text-muted-foreground">
-                      <div className="flex items-center-start items-c text-primary">
-                        <Button
-                          variant="link"
-                          size="icon"
-                          width={"md"}
-                          className="justify-start px-0"
-                        >
-                          Flight details
-                        </Button>
-                        <Button
-                          variant="link"
-                          size="icon"
-                          width={"md"}
-                          className="justify-start px-0"
-                        >
-                          Price details
-                        </Button>
-                      </div>
-
-                      <Button
-                        variant="link"
-                        size="icon"
-                        width={"md"}
-                        className="justify-end px-0 "
-                      >
-                        Edit details
-                      </Button>
-                    </div>
-                  </div>
-                  <Button
-                    className="w-6 bg-[#FBEAE9] rounded-none "
-                    variant={"destructive"}
-                  >
-                    X
-                  </Button>
-                </Card>
+              {flightData.map((flight) => (
+                <FlightCard key={flight.id} flight={flight} />
               ))}
             </div>
           </CardContent>
