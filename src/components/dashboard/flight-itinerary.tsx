@@ -10,6 +10,8 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { toast } from "@/hooks/use-toast";
+import { handleError } from "@/service/error-handler";
 
 const FlightItinerary: React.FC = () => {
   const [fromCity, setFromCity] = useState<{
@@ -77,7 +79,12 @@ const FlightItinerary: React.FC = () => {
           setDropdownItems(filteredCities);
         }
       } catch (error) {
-        console.error("Error fetching destinations:", error);
+        const errorMsg = handleError(error);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: errorMsg,
+        });
       }
     } else {
       setDropdownItems([
