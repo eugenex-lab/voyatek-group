@@ -12,10 +12,13 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive:
-          "bg-destructive text-white shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-destructive shadow-sm hover:bg-destructive/90 hover:text-foreground",
         outline:
           "border border-primary bg-background shadow-sm hover:bg-accent hover:text-accent-foreground text-primary",
-        outlineSec: "border-[0.2px] bg-background shadow-sm  text-primary",
+        outlineSec:
+          "bg-foreground text-secondary shadow-sm hover:bg-primary hover:text-primary-foreground",
+        transparent:
+          "bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground text-foreground",
         secondary:
           "bg-foreground text-primary shadow-sm hover:bg-primary hover:text-primary-foreground",
         ghost: " hover:text-accent-foreground text-muted-foreground",
@@ -33,6 +36,7 @@ const buttonVariants = cva(
       width: {
         default: "w-full",
         sm: "w-8",
+        ssm: "w-24",
         md: "w-36",
         lg: "w-full md:w-52",
         icon: "w-9",

@@ -8,6 +8,7 @@ import { useLottieAnimation } from "@/lib/utils/lottie-animation";
 import BannerWithButton from "@/components/all-campaign/banner-with-button";
 import TripPlanner from "@/components/all-campaign/trip-planner";
 import FlightItinerary from "@/components/all-campaign/flight-itinerary";
+import HotelItinerary from "@/components/all-campaign/hotels-itinerary";
 
 const Overview = () => {
   const lottieRef = useRef(null);
@@ -25,6 +26,7 @@ const Overview = () => {
       <TripPlanner />
 
       <FlightItinerary />
+      <HotelItinerary />
       <div className="flex items-center justify-center flex-1 border rounded-lg shadow-sm">
         <div
           className="flex flex-col items-center gap-1 p-6 text-center lg:mb-20"
