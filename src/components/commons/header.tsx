@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import SidebarMd from "@/components/commons/side-bar-md";
-import SidebarMobile from "./side-bar-mobile";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -22,7 +21,6 @@ const Header: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSidebarOpen = () => setIsSidebarOpen(true);
-  const handleSidebarClose = () => setIsSidebarOpen(false);
 
   return (
     <header className="flex h-20 items-center  border-b px-6 lg:h-[90px] lg:px-10 bg-foreground">
@@ -39,7 +37,6 @@ const Header: React.FC = () => {
         </SheetTrigger>
         <SheetContent side="left" className="flex flex-col">
           <SidebarMd />
-          <SidebarMobile onClose={handleSidebarClose} />
         </SheetContent>
       </Sheet>
       <div className="flex flex-1 w-full gap-2 ">

@@ -3,8 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 
 import { Icon } from "@iconify/react";
 
-import HelpCard from "./help-card";
-
 const SidebarMd = () => {
   const location = useLocation();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,9 +69,7 @@ const SidebarMd = () => {
           </nav>
         </div>
 
-        <div className="p-4 pt-14">
-          <HelpCard />
-        </div>
+        <div className="p-4 pt-14"></div>
       </div>
     </div>
   );

@@ -5,10 +5,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 // Import pages
-import Campaign from "./pages/campaign";
 import Overview from "./pages/overview";
-import CreateCampaign from "./pages/create-campaign";
-import CampaignDetails from "./pages/campaign-details";
+
 import ErrorPage from "./pages/error";
 
 // Define route configuration with layout flag
@@ -22,19 +20,19 @@ const routes = [
   {
     key: "campaign",
     path: "/",
-    component: Campaign,
+    component: Overview,
     layout: true, // Use DashboardLayout
   },
   {
     key: "create-campaign",
     path: "/",
-    component: CreateCampaign,
+    component: Overview,
     layout: true, // Use DashboardLayout
   },
   {
     key: "campaign-details",
     path: "/",
-    component: CampaignDetails,
+    component: Overview,
     layout: true, // Use DashboardLayout
   },
   {
