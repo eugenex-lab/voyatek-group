@@ -89,7 +89,7 @@ const FlightDropdown: React.FC<FlightDropdownProps> = ({
   }, []);
 
   return (
-    <div className="relative group">
+    <div className="">
       <button
         onClick={toggleDropdown}
         className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm"

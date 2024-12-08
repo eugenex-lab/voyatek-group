@@ -33,8 +33,8 @@ const TripPlanner: React.FC = () => {
           </p>
         </div>
         {/* Profile and Settings */}
-        <div>
-          <div className="flex items-center gap-2">
+        <div className="">
+          <div className="items-center hidden gap-2 lg:flex">
             <Button
               className="bg-[#E7F0FF] group-hover:text-white hover:text-white text-primary"
               width={"md"}
@@ -72,9 +72,9 @@ const TripPlanner: React.FC = () => {
       </div>
 
       {/* Cards */}
-      <div className="grid max-w-4xl grid-cols-1 gap-1 mt-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 mt-6 md:max-w-4xl md:grid-cols-3 justify-items-center md:gap-1.5">
         {/* Activities Card */}
-        <Card className="text-white bg-[#000031]">
+        <Card className="text-white bg-[#000031] max-w-sm w-full">
           <CardHeader>
             <CardTitle className="text-white">Activities</CardTitle>
             <CardDescription className="text-white">
@@ -90,7 +90,7 @@ const TripPlanner: React.FC = () => {
         </Card>
 
         {/* Hotels Card */}
-        <Card className="text-blue-900 bg-blue-100">
+        <Card className="max-w-sm bg-blue-100 text-bue-900">
           <CardHeader>
             <CardTitle className="">Hotels</CardTitle>
             <CardDescription className="text-[#1D2433]">
@@ -106,7 +106,7 @@ const TripPlanner: React.FC = () => {
         </Card>
 
         {/* Flights Card */}
-        <Card className="text-white bg-blue-500">
+        <Card className="max-w-sm text-white bg-blue-500">
           <CardHeader>
             <CardTitle className="text-foreground">Flights</CardTitle>
             <CardDescription className="text-white">

@@ -48,7 +48,7 @@ const Header: React.FC = () => {
           className="w-12 h-12"
         />
         <form className="hidden lg:flex">
-          <div className="relative md:w-40 lg:w-64">
+          <div className="relative hidden md:w-40 lg:w-64 xl:block">
             <Input
               type="search"
               placeholder="Search..."
@@ -71,7 +71,7 @@ const Header: React.FC = () => {
             height="30"
             className="md:w-5 md:h-5"
           />
-          <span className="hidden md:block">Home</span>
+          <span className="hidden lg:block">Home</span>
         </Button>
 
         <Button
@@ -85,7 +85,7 @@ const Header: React.FC = () => {
             height="30"
             className="md:w-5 md:h-5"
           />
-          <span className="hidden md:block">Dashboard</span>
+          <span className="hidden lg:block">Dashboard</span>
         </Button>
         <Button
           size={"ghost"}
@@ -98,7 +98,7 @@ const Header: React.FC = () => {
             height="30"
             className="md:w-5 md:h-5"
           />
-          <span className="hidden md:block">Wallet</span>
+          <span className="hidden lg:block">Wallet</span>
         </Button>
 
         <Button
@@ -112,7 +112,7 @@ const Header: React.FC = () => {
             height="30"
             className="md:w-5 md:h-5"
           />
-          <span className="hidden md:block">Plan a trip</span>
+          <span className="hidden lg:block">Plan a trip</span>
         </Button>
         <Button
           size={"ghost"}
@@ -125,7 +125,7 @@ const Header: React.FC = () => {
             height="30"
             className="md:w-5 md:h-5"
           />
-          <span className="hidden md:block">Commission for life</span>
+          <span className="hidden lg:block">Commission for life</span>
         </Button>
         <div className="items-center hidden lg:flex">
           <Separator className="mx-6 h-14" orientation="vertical" />
@@ -146,7 +146,7 @@ const Header: React.FC = () => {
               height="30"
               className="md:w-5 md:h-5"
             />
-            <span className="hidden md:block">Notification</span>
+            <span className="hidden lg:block">Notification</span>
           </Button>
 
           <Button
@@ -160,7 +160,7 @@ const Header: React.FC = () => {
               height="30"
               className="md:w-5 md:h-5"
             />
-            <span className="hidden md:block">Carts</span>
+            <span className="hidden lg:block">Carts</span>
           </Button>
 
           <Button
@@ -174,7 +174,7 @@ const Header: React.FC = () => {
               height="30"
               className="md:w-5 md:h-5"
             />
-            <span className="hidden md:block">Create</span>
+            <span className="hidden lg:block">Create</span>
           </Button>
           <ThemeToggle />
         </div>

@@ -33,11 +33,11 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
               <Badge className="bg-[#0A369D]">{flight.class}</Badge>
             </p>
           </div>
-          <div className="text-center">
+          <div className="hidden text-center lg:block">
             <p className="text-lg font-bold">{flight.departureTime}</p>
             <p className="text-sm text-muted-foreground">{flight.date}</p>
           </div>
-          <div className="space-y-1.5 text-center">
+          <div className="space-y-1.5 text-center hidden xl:block">
             <div className="flex items-center justify-between w-96">
               <Icon icon="mingcute:flight-takeoff-line" />
               <p className="text-sm text-muted-foreground">
@@ -54,7 +54,7 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
               <h5 className="font-bold text-[18px]">{flight.arrivalCode}</h5>
             </div>
           </div>
-          <div className="text-center">
+          <div className="hidden text-center lg:block">
             <p className="text-lg font-bold">{flight.arrivalTime}</p>
             <p className="text-sm text-muted-foreground">{flight.date}</p>
           </div>
@@ -72,12 +72,12 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
         <Separator />
 
         <div className="flex justify-between p-4 text-sm text-muted-foreground">
-          <div className="flex items-center-start items-c text-primary">
+          <div className="flex items-center items-center-start text-primary">
             <Button
               variant="link"
               size="icon"
               width={"md"}
-              className="justify-start px-0"
+              className="justify-start w-24 px-0"
             >
               Flight details
             </Button>
@@ -85,7 +85,7 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
               variant="link"
               size="icon"
               width={"md"}
-              className="justify-start px-0"
+              className="justify-start w-24 px-0"
             >
               Price details
             </Button>
@@ -95,7 +95,7 @@ const FlightCard: React.FC<{ flight: Flight }> = ({ flight }) => {
             variant="link"
             size="icon"
             width={"md"}
-            className="justify-end px-0 "
+            className="justify-end hidden w-24 px-0 md:block"
           >
             Edit details
           </Button>

@@ -102,7 +102,7 @@ const HotelItinerary: React.FC = () => {
                 <Card key={hotel.id} className="flex justify-between py-0 mb-4">
                   <Carousel
                     plugins={[plugin.current]}
-                    className="h-56 p-3 pr-0 w-72"
+                    className="hidden h-56 p-3 pr-0 w-60 lg:block"
                     onMouseEnter={plugin.current.stop}
                     onMouseLeave={plugin.current.reset}
                   >
@@ -112,7 +112,7 @@ const HotelItinerary: React.FC = () => {
                           <img
                             src={imgUrl}
                             alt={`Hotel ${hotel.name} image ${index + 1}`}
-                            className="object-cover w-64 h-[200px] rounded"
+                            className="object-cover w-48 h-[200px] rounded"
                           />
                         </CarouselItem>
                       ))}
@@ -126,9 +126,11 @@ const HotelItinerary: React.FC = () => {
                       {/* Left: Hotel Details */}
                       <div className="flex-1">
                         <h5 className="text-xl font-bold">{hotel.name}</h5>
-                        <p className="text-sm max-w-96">{hotel.address}</p>
+                        <p className="hidden text-sm max-w-96 lg:block">
+                          {hotel.address}
+                        </p>
 
-                        <div className="flex items-center gap-2 mt-2 text-sm">
+                        <div className="flex flex-wrap items-center gap-2 mt-2 text-sm">
                           <div className="flex items-center gap-1.5 text-primary">
                             <Icon icon="ri:map-pin-line" />
                             <p className="text-sm ">Show in map</p>
@@ -210,7 +212,7 @@ const HotelItinerary: React.FC = () => {
                         variant="link"
                         size="icon"
                         width={"ssm"}
-                        className="pr-0"
+                        className="hidden pr-0 lg:block"
                       >
                         Edit details
                       </Button>

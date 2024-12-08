@@ -34,9 +34,8 @@ const FlightItinerary: React.FC = () => {
     { city: "Tokyo", code: "HND" },
     { city: "Dubai", code: "DXB" },
   ]);
-  const [date, setDate] = React.useState<Date>();
-
-  const [date2, setDate2] = React.useState<Date>();
+  const [departureDate, setDepartureDate] = useState<Date>();
+  const [returnDate, setReturnDate] = useState<Date>();
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -157,6 +156,44 @@ const FlightItinerary: React.FC = () => {
         "USB Port",
       ],
     },
+    {
+      id: 1,
+      airline: "American Airlines",
+      flightNumber: "AA-829",
+      class: "First Class",
+      departureTime: "08:35",
+      arrivalTime: "09:55",
+      date: "Sun, 20 Aug",
+      duration: "1h 45m",
+      departureCode: "LOS",
+      arrivalCode: "SIN",
+      price: "₦123,450.00",
+      facilities: [
+        "Baggage: 20kg, Cabin Baggage: 8kg",
+        "In flight entertainment",
+        "In flight meal",
+        "USB Port",
+      ],
+    },
+    {
+      id: 2,
+      airline: "American Airlines",
+      flightNumber: "AA-829",
+      class: "First Class",
+      departureTime: "08:35",
+      arrivalTime: "09:55",
+      date: "Sun, 20 Aug",
+      duration: "1h 45m",
+      departureCode: "LOS",
+      arrivalCode: "SIN",
+      price: "₦123,450.00",
+      facilities: [
+        "Baggage: 20kg, Cabin Baggage: 8kg",
+        "In flight entertainment",
+        "In flight meal",
+        "USB Port",
+      ],
+    },
   ];
 
   return (
@@ -176,15 +213,15 @@ const FlightItinerary: React.FC = () => {
             <CardTitle className="flex items-center gap-2">
               <Icon icon="ph:airplane-in-flight" width="24" height="24" />
               <span>Flights</span>
-              <div className="flex gap-2 pl-4">
+              <div className="hidden gap-2 pl-4 lg:flex">
                 {/* From Dropdown */}
                 <div className="flex items-center justify-center ">
-                  <div className="relative group">
+                  <div className="relative h-full group">
                     <button
                       onClick={toggleDropdownFrom}
-                      className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px]"
+                      className=" justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px] h-full hidden xl:inline-flex"
                     >
-                      <div className="flex flex-row items-center w-full gap-2">
+                      <div className="flex flex-row items-center w-full h-full gap-2">
                         <Icon
                           icon="mingcute:flight-takeoff-line"
                           width="24"
@@ -242,7 +279,7 @@ const FlightItinerary: React.FC = () => {
                   <div className="relative group">
                     <button
                       onClick={toggleDropdownTo}
-                      className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px]"
+                      className=" justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500 w-[200px] hidden xl:flex"
                     >
                       <div className="flex flex-row items-center w-full gap-2">
                         <Icon
@@ -294,63 +331,16 @@ const FlightItinerary: React.FC = () => {
                     )}
                   </div>
                 </div>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[200px] justify-start text-left font-normal border-none bg-white border-muted-foreground rounded-md shadow-lg ring-1 ring-black ring-opacity-5 space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <div className="flex space-x-1.5 items-center">
-                        <CalendarIcon />
-                        {date ? (
-                          format(date, "PPP")
-                        ) : (
-                          <span>Pick Departure </span>
-                        )}
-                      </div>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[200px] justify-start text-left font-normal border-none bg-white border-muted-foreground rounded-md shadow-lg ring-1 ring-black ring-opacity-5 space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500",
-                        !date && "text-muted-foreground"
-                      )}
-                    >
-                      <div className="flex space-x-1.5 items-center">
-                        <CalendarIcon />
-                        {date ? (
-                          format(date, "PPP")
-                        ) : (
-                          <span>Pick Departure </span>
-                        )}
-                      </div>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={date2}
-                      onSelect={setDate2}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <DatePicker
+                  selectedDate={departureDate}
+                  setSelectedDate={setDepartureDate}
+                  placeholder="Pick Departure"
+                />
+                <DatePicker
+                  selectedDate={returnDate}
+                  setSelectedDate={setReturnDate}
+                  placeholder="Pick Return"
+                />
 
                 <Button width={"md"}>Search</Button>
               </div>
@@ -371,3 +361,44 @@ const FlightItinerary: React.FC = () => {
 };
 
 export default FlightItinerary;
+
+const DatePicker = ({
+  selectedDate,
+  setSelectedDate,
+  placeholder,
+}: {
+  selectedDate: Date | undefined;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  placeholder: string;
+}) => {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(
+            "w-[200px] justify-start text-left font-normal border-none bg-white border-muted-foreground rounded-md shadow-lg ring-1 ring-black ring-opacity-5 space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500",
+            !selectedDate && "text-muted-foreground"
+          )}
+        >
+          <div className="flex space-x-1.5 items-center">
+            <CalendarIcon />
+            {selectedDate ? (
+              format(selectedDate, "PPP")
+            ) : (
+              <span>{placeholder}</span>
+            )}
+          </div>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={setSelectedDate}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};

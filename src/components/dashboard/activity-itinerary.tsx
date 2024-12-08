@@ -95,13 +95,13 @@ const ActivityItinerary: React.FC = () => {
           {activities.map((activity) => (
             <Card
               key={activity.id}
-              className="flex justify-between h-56 py-0 mb-4"
+              className="flex justify-between py-0 mb-4 md:h-56"
             >
               <div className="flex items-center w-full ">
                 {/* Image Carousel */}
                 <Carousel
                   plugins={[plugin.current]}
-                  className="h-48 pl-4 pr-0 w-52 "
+                  className="hidden h-48 pl-4 pr-0 w-52 lg:block"
                   onMouseEnter={plugin.current.stop}
                   onMouseLeave={plugin.current.reset}
                 >
@@ -122,7 +122,7 @@ const ActivityItinerary: React.FC = () => {
 
                 {/* Details */}
                 <div className="flex-1 p-4 px-0 pb-0 space-y-1">
-                  <div className="flex justify-between px-4">
+                  <div className="flex flex-wrap justify-between px-4">
                     <div>
                       <h3 className="text-xl font-bold">{activity.name}</h3>
                       <p className="text-sm text-muted-foreground max-w-96">
@@ -153,14 +153,14 @@ const ActivityItinerary: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  ()
+
                   <Separator />
                   <div className="flex items-center justify-between h-8 px-4">
                     <div className="flex space-x-1.5 text-muted-foreground">
                       <p className="font-bold">What's Included:</p>
                       <p>{activity.included}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center hidden gap-2 lg:block">
                       <Button
                         className="h-4 text-sx bg-[#0A369D] text-foreground py-3"
                         width={"ssm"}
@@ -200,7 +200,7 @@ const ActivityItinerary: React.FC = () => {
                       variant="link"
                       size="sm"
                       width={"ssm"}
-                      className="pr-0"
+                      className="hidden pr-0 lg:block"
                     >
                       Edit details
                     </Button>
