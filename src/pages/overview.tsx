@@ -1,8 +1,8 @@
-import BannerWithButton from "@/components/all-campaign/banner-with-button";
-import TripPlanner from "@/components/all-campaign/trip-planner";
-import FlightItinerary from "@/components/all-campaign/flight-itinerary";
-import HotelItinerary from "@/components/all-campaign/hotels-itinerary";
-import ActivityItinerary from "@/components/all-campaign/activity-itinerary";
+import BannerWithButton from "@/components/dashboard/banner-with-button";
+import TripPlanner from "@/components/dashboard/trip-planner";
+import FlightItinerary from "@/components/dashboard/flight-itinerary";
+import HotelItinerary from "@/components/dashboard/hotels-itinerary";
+import ActivityItinerary from "@/components/dashboard/activity-itinerary";
 
 const Overview = () => {
   return (
