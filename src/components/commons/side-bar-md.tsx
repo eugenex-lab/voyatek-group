@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import { Icon } from "@iconify/react";
 
@@ -7,13 +7,7 @@ import HelpCard from "./help-card";
 
 const SidebarMd = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string | null>(null);
-
-  const handleClick = () => {
-    navigate("/create-campaign");
-  };
 
   const sidebarItems = [
     { path: "/campaign", label: "Activities", icon: "ph:road-horizon-bold" },
@@ -55,7 +49,7 @@ const SidebarMd = () => {
   ];
 
   return (
-    <div className="hidden w-full bg-white border-r rounded md:block border-radius max-w-72">
+    <div className="hidden w-full border-r rounded md:block border-radius max-w-72 bg-foreground">
       <div className="flex flex-col h-full max-h-screen gap-2 py-4">
         <div>
           <nav className="grid items-start p-2 space-y-3 text-sm font-medium lg:px-8 lg:pr-12">

@@ -36,7 +36,7 @@ const buttonVariants = cva(
       width: {
         default: "w-full",
         sm: "w-8",
-        ssm: "w-24",
+        ssm: "w-18",
         md: "w-36",
         lg: "w-full md:w-52",
         icon: "w-9",

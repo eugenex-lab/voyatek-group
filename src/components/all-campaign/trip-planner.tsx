@@ -35,8 +35,11 @@ const TripPlanner: React.FC = () => {
         {/* Profile and Settings */}
         <div>
           <div className="flex items-center gap-2">
-            <Button className="bg-[#E7F0FF]" width={"md"}>
-              <Icon icon="iconoir:add-user" className="w-6 h-6 text-primary" />
+            <Button
+              className="bg-[#E7F0FF] group-hover:text-white hover:text-white text-primary"
+              width={"md"}
+            >
+              <Icon icon="iconoir:add-user" className="w-6 h-6 " />
             </Button>
             <Icon icon="bi:three-dots" className="w-8 h-8 text-secondary" />
           </div>
@@ -89,7 +92,7 @@ const TripPlanner: React.FC = () => {
         {/* Hotels Card */}
         <Card className="text-blue-900 bg-blue-100">
           <CardHeader>
-            <CardTitle>Hotels</CardTitle>
+            <CardTitle className="">Hotels</CardTitle>
             <CardDescription className="text-[#1D2433]">
               Build, personalize, and optimize your itineraries with our trip
               planner.
@@ -105,7 +108,7 @@ const TripPlanner: React.FC = () => {
         {/* Flights Card */}
         <Card className="text-white bg-blue-500">
           <CardHeader>
-            <CardTitle>Flights</CardTitle>
+            <CardTitle className="text-foreground">Flights</CardTitle>
             <CardDescription className="text-white">
               Build, personalize, and optimize your itineraries with our trip
               planner.

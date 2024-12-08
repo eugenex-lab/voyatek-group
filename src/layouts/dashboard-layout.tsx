@@ -21,7 +21,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         <AnimatePresence mode="wait">
           <motion.main
             key={location.pathname}
-            className="flex flex-col flex-1 gap-4 p-4 md:ml-8 bg-foreground"
+            className="flex flex-col flex-1 gap-4 p-4 rounded md:ml-8 bg-foreground"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}

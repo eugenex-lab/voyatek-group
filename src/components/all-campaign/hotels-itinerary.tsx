@@ -13,9 +13,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 
 const HotelItinerary: React.FC = () => {
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
+  const plugin = React.useRef(Autoplay({ delay: 2000 }));
   const hotels = [
     {
       id: 1,
@@ -84,9 +82,14 @@ const HotelItinerary: React.FC = () => {
       <div className="mt-6">
         <Card className="px-2 bg-[#344054]">
           <CardHeader className="flex flex-row items-center justify-between pt-0">
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <Icon icon="ph:warehouse-duotone" width="24" height="24" />
-              <span>Hotels</span>
+            <CardTitle className="flex items-center gap-2 text-foreground ">
+              <Icon
+                icon="ph:warehouse-duotone"
+                width="24"
+                height="24"
+                className="dark:text-white"
+              />
+              <span className="dark:text-white">Hotels</span>
             </CardTitle>
             <Button variant="secondary" width={"md"}>
               Add Hotels
@@ -99,7 +102,7 @@ const HotelItinerary: React.FC = () => {
                 <Card key={hotel.id} className="flex justify-between py-0 mb-4">
                   <Carousel
                     plugins={[plugin.current]}
-                    className="w-56 h-56 p-3 pr-0"
+                    className="h-56 p-3 pr-0 w-72"
                     onMouseEnter={plugin.current.stop}
                     onMouseLeave={plugin.current.reset}
                   >
@@ -109,7 +112,7 @@ const HotelItinerary: React.FC = () => {
                           <img
                             src={imgUrl}
                             alt={`Hotel ${hotel.name} image ${index + 1}`}
-                            className="object-cover w-56 h-[230px] rounded"
+                            className="object-cover w-64 h-[200px] rounded"
                           />
                         </CarouselItem>
                       ))}
@@ -155,7 +158,7 @@ const HotelItinerary: React.FC = () => {
                     </div>
                     <Separator />
                     {/* Facilities Section */}
-                    <div className="flex justify-between p-4 text-sm text-muted-foreground">
+                    <div className="flex justify-between p-2 px-4 text-sm text-muted-foreground">
                       <p>
                         <span className="font-bold">Facilities:</span>{" "}
                         {hotel.facilities.join("  ")}
@@ -189,7 +192,7 @@ const HotelItinerary: React.FC = () => {
                     </div>
                     <Separator />
                     {/* Bottom Actions */}
-                    <div className="flex justify-between p-4 text-sm text-muted-foreground">
+                    <div className="flex justify-between p-2 px-4 text-sm text-muted-foreground">
                       <div className="flex gap-4">
                         <Button
                           variant="link"
